@@ -1,10 +1,9 @@
 package main
 
 import (
+	"gitlab.com/arpanrecme/initsecureserver/internal/iss"
 	"log"
 	"net/http"
-
-	"gitlab.com/arpanrecme/initsecureserver/internal/iss"
 )
 
 func main() {

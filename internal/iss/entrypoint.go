@@ -1,9 +1,6 @@
 package iss
 
 import (
-	"gitlab.com/arpanrecme/initsecureserver/internal/iss/fileserver"
-	"gitlab.com/arpanrecme/initsecureserver/internal/iss/tfstate"
-	"gitlab.com/arpanrecme/initsecureserver/internal/iss/utils"
 	"io"
 	"log"
 	"net/http"
@@ -45,10 +42,10 @@ func EntryPoint(w http.ResponseWriter, r *http.Request) {
 		"\nBody: ", string(body), "\nQuery: ", query)
 
 	if strings.HasPrefix(urlPath, "/tfstate/") {
-		tfstate.TerraformStateHandler(string(body), rMethod, urlPath, query, w)
+		TerraformStateHandler(string(body), rMethod, urlPath, query, w)
 	} else if strings.HasPrefix(urlPath, "/files/") {
-		fileserver.ReadWriteFilesFromURL(string(body), rMethod, urlPath, w)
+		ReadWriteFilesFromURL(string(body), rMethod, urlPath, w)
 	} else {
-		utils.HttpResponseWriter(w, http.StatusNotFound, "")
+		HttpResponseWriter(w, http.StatusNotFound, "")
 	}
 }
