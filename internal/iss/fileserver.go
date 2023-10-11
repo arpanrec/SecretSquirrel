@@ -8,7 +8,7 @@ import (
 
 func ReadWriteFilesFromURL(b string, m string, p string, w http.ResponseWriter) {
 
-	filePath := path.Join(issDataDir, p)
+	filePath := path.Join(StorageDataDir, p)
 
 	switch m {
 

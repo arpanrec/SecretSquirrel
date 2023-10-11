@@ -11,8 +11,8 @@ import (
 func TfstateHandeler(b string, m string, p string, q map[string][]string,
 	w http.ResponseWriter) {
 
-	stateFilePath := path.Join(issDataDir, p)
-	lockFilePath := path.Join(issDataDir, fmt.Sprintf("%s.lock", p))
+	stateFilePath := path.Join(StorageDataDir, p)
+	lockFilePath := path.Join(StorageDataDir, fmt.Sprintf("%s.lock", p))
 
 	switch m {
 

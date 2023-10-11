@@ -8,12 +8,12 @@ import (
 	"strings"
 )
 
-var issDataDir string = "data"
+var StorageDataDir string = "data"
 
 func EntryPoint(w http.ResponseWriter, r *http.Request) {
 	issDataDirEnv := os.Getenv("ISS_DATA_DIR")
 	if issDataDirEnv != "" {
-		issDataDir = issDataDirEnv
+		StorageDataDir = issDataDirEnv
 	}
 
 	urlPath := r.URL.Path
