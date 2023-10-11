@@ -1,6 +1,7 @@
 package iss
 
 import (
+	"gitlab.com/arpanrecme/initsecureserver/internal/iss/utils"
 	"log"
 	"net/http"
 	"path"
@@ -13,30 +14,30 @@ func ReadWriteFilesFromURL(b string, m string, p string, w http.ResponseWriter) 
 	switch m {
 
 	case http.MethodGet:
-		d, err := GetData(filePath)
+		d, err := utils.GetData(filePath)
 		if err != nil {
-			HttpResponseWriter(w, http.StatusNotFound, "Not Found")
+			utils.HttpResponseWriter(w, http.StatusNotFound, "Not Found")
 			return
 		}
-		HttpResponseWriter(w, http.StatusOK, d)
+		utils.HttpResponseWriter(w, http.StatusOK, d)
 		return
 	case http.MethodPut, http.MethodPost:
 		log.Println("Body: ", b)
-		_, err := PutData(filePath, b)
+		_, err := utils.PutData(filePath, b)
 		if err != nil {
-			HttpResponseWriter(w, http.StatusInternalServerError, "Internal Server Error")
+			utils.HttpResponseWriter(w, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
-		HttpResponseWriter(w, http.StatusCreated, "OK")
+		utils.HttpResponseWriter(w, http.StatusCreated, "OK")
 		return
 	case http.MethodDelete:
-		err := DeleteData(filePath)
+		err := utils.DeleteData(filePath)
 		if err != nil {
-			HttpResponseWriter(w, http.StatusInternalServerError, "Internal Server Error")
+			utils.HttpResponseWriter(w, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
 	default:
-		HttpResponseWriter(w, http.StatusMethodNotAllowed, "Unsupported Method")
+		utils.HttpResponseWriter(w, http.StatusMethodNotAllowed, "Unsupported Method")
 
 	}
 }

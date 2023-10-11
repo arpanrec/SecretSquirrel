@@ -1,6 +1,7 @@
 package iss
 
 import (
+	"gitlab.com/arpanrecme/initsecureserver/internal/iss/utils"
 	"io"
 	"log"
 	"net/http"
@@ -46,6 +47,6 @@ func EntryPoint(w http.ResponseWriter, r *http.Request) {
 	} else if strings.HasPrefix(urlPath, "/files/") {
 		ReadWriteFilesFromURL(string(body), rMethod, urlPath, w)
 	} else {
-		HttpResponseWriter(w, http.StatusNotFound, "")
+		utils.HttpResponseWriter(w, http.StatusNotFound, "")
 	}
 }

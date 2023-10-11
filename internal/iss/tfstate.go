@@ -2,6 +2,7 @@ package iss
 
 import (
 	"fmt"
+	"gitlab.com/arpanrecme/initsecureserver/internal/iss/utils"
 	"log"
 	"net/http"
 	"path"
@@ -17,27 +18,27 @@ func TfstateHandeler(b string, m string, p string, q map[string][]string,
 	switch m {
 
 	case http.MethodGet:
-		d, err := GetData(stateFilePath)
+		d, err := utils.GetData(stateFilePath)
 		if err != nil {
 			if strings.HasSuffix(err.Error(), "no such file or directory") {
-				HttpResponseWriter(w, http.StatusOK, "")
+				utils.HttpResponseWriter(w, http.StatusOK, "")
 				return
 			}
-			HttpResponseWriter(w, http.StatusInternalServerError, fmt.Sprintf("Internal Server Error: %s", err.Error()))
+			utils.HttpResponseWriter(w, http.StatusInternalServerError, fmt.Sprintf("Internal Server Error: %s", err.Error()))
 			return
 		}
-		HttpResponseWriter(w, http.StatusOK, d)
+		utils.HttpResponseWriter(w, http.StatusOK, d)
 		return
 	case "LOCK":
-		existingLockData, existingLockDataErr := GetData(lockFilePath)
+		existingLockData, existingLockDataErr := utils.GetData(lockFilePath)
 		if existingLockDataErr != nil {
 			if !strings.HasSuffix(existingLockDataErr.Error(), "no such file or directory") {
-				HttpResponseWriter(w, http.StatusInternalServerError, fmt.Sprintf("Internal Server Error: %s", existingLockDataErr.Error()))
+				utils.HttpResponseWriter(w, http.StatusInternalServerError, fmt.Sprintf("Internal Server Error: %s", existingLockDataErr.Error()))
 				return
 			} else {
-				_, lockDataWriteErr := PutData(lockFilePath, b)
+				_, lockDataWriteErr := utils.PutData(lockFilePath, b)
 				if lockDataWriteErr != nil {
-					HttpResponseWriter(w, http.StatusInternalServerError, fmt.Sprintf("Internal Server Error: %s", lockDataWriteErr.Error()))
+					utils.HttpResponseWriter(w, http.StatusInternalServerError, fmt.Sprintf("Internal Server Error: %s", lockDataWriteErr.Error()))
 					return
 				}
 			}
@@ -45,38 +46,38 @@ func TfstateHandeler(b string, m string, p string, q map[string][]string,
 
 		if existingLockData != "" {
 			log.Printf("Lock already exists: %s", existingLockData)
-			HttpResponseWriter(w, http.StatusLocked, existingLockData)
+			utils.HttpResponseWriter(w, http.StatusLocked, existingLockData)
 			return
 		}
 	case "UNLOCK":
-		err := DeleteData(lockFilePath)
+		err := utils.DeleteData(lockFilePath)
 		if err != nil {
-			HttpResponseWriter(w, http.StatusInternalServerError, fmt.Sprintf("Internal Server Error: %s", err.Error()))
+			utils.HttpResponseWriter(w, http.StatusInternalServerError, fmt.Sprintf("Internal Server Error: %s", err.Error()))
 			return
 		}
-		HttpResponseWriter(w, http.StatusOK, "")
+		utils.HttpResponseWriter(w, http.StatusOK, "")
 		return
 	case http.MethodPut, http.MethodPost:
 		if q["force"] != nil {
 			if q["force"][0] == "true" {
-				_, err := PutData(stateFilePath, b)
+				_, err := utils.PutData(stateFilePath, b)
 				if err != nil {
-					HttpResponseWriter(w, http.StatusInternalServerError, fmt.Sprintf("Internal Server Error: %s", err.Error()))
+					utils.HttpResponseWriter(w, http.StatusInternalServerError, fmt.Sprintf("Internal Server Error: %s", err.Error()))
 					return
 				}
-				HttpResponseWriter(w, http.StatusOK, b)
+				utils.HttpResponseWriter(w, http.StatusOK, b)
 				return
 			}
 		}
-		_, err := PutData(stateFilePath, b)
+		_, err := utils.PutData(stateFilePath, b)
 		if err != nil {
-			HttpResponseWriter(w, http.StatusInternalServerError, fmt.Sprintf("Internal Server Error: %s", err.Error()))
+			utils.HttpResponseWriter(w, http.StatusInternalServerError, fmt.Sprintf("Internal Server Error: %s", err.Error()))
 			return
 		}
-		HttpResponseWriter(w, http.StatusOK, b)
+		utils.HttpResponseWriter(w, http.StatusOK, b)
 		return
 	default:
-		HttpResponseWriter(w, http.StatusMethodNotAllowed, "Method Not Allowed")
+		utils.HttpResponseWriter(w, http.StatusMethodNotAllowed, "Method Not Allowed")
 	}
 
 }

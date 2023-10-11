@@ -1,4 +1,4 @@
-package iss
+package utils
 
 import (
 	"fmt"
