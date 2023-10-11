@@ -1,7 +1,8 @@
-package iss
+package tfstate
 
 import (
 	"fmt"
+	"gitlab.com/arpanrecme/initsecureserver/internal/iss"
 	"gitlab.com/arpanrecme/initsecureserver/internal/iss/utils"
 	"log"
 	"net/http"
@@ -12,8 +13,8 @@ import (
 func TfstateHandeler(b string, m string, p string, q map[string][]string,
 	w http.ResponseWriter) {
 
-	stateFilePath := path.Join(StorageDataDir, p)
-	lockFilePath := path.Join(StorageDataDir, fmt.Sprintf("%s.lock", p))
+	stateFilePath := path.Join(iss.StorageDataDir, p)
+	lockFilePath := path.Join(iss.StorageDataDir, fmt.Sprintf("%s.lock", p))
 
 	switch m {
 
