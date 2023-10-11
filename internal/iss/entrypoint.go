@@ -17,7 +17,6 @@ func EntryPoint(w http.ResponseWriter, r *http.Request) {
 	}
 
 	urlPath := r.URL.Path
-	log.Println("URL Path: ", urlPath)
 
 	body, errReadAll := io.ReadAll(r.Body)
 	defer func(Body io.ReadCloser) {
@@ -29,16 +28,24 @@ func EntryPoint(w http.ResponseWriter, r *http.Request) {
 	if errReadAll != nil {
 		log.Fatal(errReadAll)
 	}
-	log.Println("Body: ", string(body))
 
 	rMethod := r.Method
-	log.Println("Method: ", rMethod)
 
-	if strings.HasPrefix(urlPath, "ftstate/") {
-		HttpResponseWriter(w, 404, "Not Found")
-		return
+	query := r.URL.Query()
+
+	header := r.Header
+
+	formData := r.Form
+
+	log.Println("URL Path: ", urlPath, "\nMethod: ", rMethod, "\nHeader: ", header,
+		"\nForm Data: ", formData,
+		"\nBody: ", string(body), "\nQuery: ", query)
+
+	if strings.HasPrefix(urlPath, "/tfstate/") {
+		TfstateHandeler(string(body), rMethod, urlPath, query, w)
+	} else if strings.HasPrefix(urlPath, "/files/") {
+		ReadWriteFilesFromURL(string(body), rMethod, urlPath, w)
+	} else {
+		HttpResponseWriter(w, http.StatusNotFound, "")
 	}
-
-	ReadWriteFilesFromURL(string(body), rMethod, urlPath, w)
-
 }
