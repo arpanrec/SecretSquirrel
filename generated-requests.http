@@ -6,3 +6,7 @@ PUT {{endpoint}}/api/v1/objects/a.json
 
 ###
 GET {{endpoint}}/api/v1/objects/a.json
+
+###
+
+GET {{endpoint}}/tfstate/test1
