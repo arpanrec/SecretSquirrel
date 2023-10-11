@@ -1,6 +1,7 @@
 package iss
 
 import (
+	"gitlab.com/arpanrecme/initsecureserver/internal/iss/fileserver"
 	"gitlab.com/arpanrecme/initsecureserver/internal/iss/utils"
 	"io"
 	"log"
@@ -45,7 +46,7 @@ func EntryPoint(w http.ResponseWriter, r *http.Request) {
 	if strings.HasPrefix(urlPath, "/tfstate/") {
 		TfstateHandeler(string(body), rMethod, urlPath, query, w)
 	} else if strings.HasPrefix(urlPath, "/files/") {
-		ReadWriteFilesFromURL(string(body), rMethod, urlPath, w)
+		fileserver.ReadWriteFilesFromURL(string(body), rMethod, urlPath, w)
 	} else {
 		utils.HttpResponseWriter(w, http.StatusNotFound, "")
 	}

@@ -1,6 +1,7 @@
-package iss
+package fileserver
 
 import (
+	"gitlab.com/arpanrecme/initsecureserver/internal/iss"
 	"gitlab.com/arpanrecme/initsecureserver/internal/iss/utils"
 	"log"
 	"net/http"
@@ -9,7 +10,7 @@ import (
 
 func ReadWriteFilesFromURL(b string, m string, p string, w http.ResponseWriter) {
 
-	filePath := path.Join(StorageDataDir, p)
+	filePath := path.Join(iss.StorageDataDir, p)
 
 	switch m {
 
