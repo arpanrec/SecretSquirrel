@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func TfstateHandeler(b string, m string, p string, q map[string][]string,
+func TerraformStateHandler(b string, m string, p string, q map[string][]string,
 	w http.ResponseWriter) {
 
 	stateFilePath := path.Join(iss.StorageDataDir, p)

@@ -45,7 +45,7 @@ func EntryPoint(w http.ResponseWriter, r *http.Request) {
 		"\nBody: ", string(body), "\nQuery: ", query)
 
 	if strings.HasPrefix(urlPath, "/tfstate/") {
-		tfstate.TfstateHandeler(string(body), rMethod, urlPath, query, w)
+		tfstate.TerraformStateHandler(string(body), rMethod, urlPath, query, w)
 	} else if strings.HasPrefix(urlPath, "/files/") {
 		fileserver.ReadWriteFilesFromURL(string(body), rMethod, urlPath, w)
 	} else {
