@@ -1,29 +1,31 @@
-package iss
+package storage
 
 import (
-	"fmt"
 	"log"
-	"net/http"
 	"os"
+	"path"
 	"path/filepath"
 )
 
-func HttpResponseWriter(w http.ResponseWriter, code int, body string) {
-	w.WriteHeader(code)
-	_, err := fmt.Fprint(w, body)
-	if err != nil {
-		log.Fatal(err)
+func getPath() string {
+	var StorageDataDir string = "data"
+	issDataDirEnv := os.Getenv("ISS_DATA_DIR")
+	if issDataDirEnv != "" {
+		StorageDataDir = issDataDirEnv
 	}
+	return StorageDataDir
 }
 
-func GetData(p string) (string, error) {
+func GetData(location string) (string, error) {
+	p := path.Join(getPath(), location)
 
 	// Read the file and return the contents
 	d, err := os.ReadFile(p)
 	return string(d), err
 }
 
-func PutData(p string, data string) (bool, error) {
+func PutData(location string, data string) (bool, error) {
+	p := path.Join(getPath(), location)
 	dir := filepath.Dir(p)
 	errMakeDir := os.MkdirAll(dir, 0755)
 	if errMakeDir != nil {
@@ -38,7 +40,8 @@ func PutData(p string, data string) (bool, error) {
 	return true, nil
 }
 
-func DeleteData(p string) error {
+func DeleteData(location string) error {
+	p := path.Join(getPath(), location)
 	err := os.Remove(p)
 	return err
 }

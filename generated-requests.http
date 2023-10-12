@@ -1,11 +1,11 @@
-PUT {{endpoint}}/api/v1/objects/a.json
+PUT {{endpoint}}/files/v1/objects/a.json
 
 {
   "name": "new namasfasfsae"
 }
 
 ###
-GET {{endpoint}}/api/v1/objects/a.json
+GET {{endpoint}}/files/v1/objects/a.json
 
 ###
 
