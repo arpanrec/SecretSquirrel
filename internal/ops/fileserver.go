@@ -1,9 +1,10 @@
 package ops
 
 import (
-	"gitlab.com/arpanrecme/initsecureserver/internal/storage"
 	"log"
 	"net/http"
+
+	"github.com/arpanrec/secureserver/internal/storage"
 )
 
 func ReadWriteFilesFromURL(b string, m string, filePath string, w http.ResponseWriter) {

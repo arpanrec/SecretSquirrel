@@ -1,14 +1,15 @@
-package main
+package cmd
 
 import (
-	"gitlab.com/arpanrecme/initsecureserver/internal/ops"
 	"io"
 	"log"
 	"net/http"
 	"strings"
+
+	"github.com/arpanrec/secureserver/internal/ops"
 )
 
-func EntryPoint(w http.ResponseWriter, r *http.Request) {
+func entryPoint(w http.ResponseWriter, r *http.Request) {
 
 	urlPath := r.URL.Path
 
@@ -48,11 +49,11 @@ func EntryPoint(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func main() {
+func Runner() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		EntryPoint(w, r)
+		entryPoint(w, r)
 	})
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
