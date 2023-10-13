@@ -2,10 +2,11 @@ package ops
 
 import (
 	"fmt"
-	"gitlab.com/arpanrecme/initsecureserver/internal/storage"
 	"log"
 	"net/http"
 	"strings"
+
+	"github.com/arpanrec/secureserver/internal/storage"
 )
 
 func httpResponseWriter(w http.ResponseWriter, code int, body string) {

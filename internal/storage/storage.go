@@ -1,7 +1,7 @@
 package storage
 
 import (
-	"gitlab.com/arpanrecme/initsecureserver/internal/physical"
+	"github.com/arpanrec/secureserver/internal/physical"
 )
 
 func getStorage(location string, data string) physical.Storage {
