@@ -7,6 +7,12 @@ import (
 	"path/filepath"
 )
 
+type Storage interface {
+	GetData() (string, error)
+	PutData() (bool, error)
+	DeleteData() error
+}
+
 type FileStorage struct {
 	Location string
 	Data     string
