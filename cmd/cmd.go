@@ -1,20 +1,15 @@
-package iss
+package cmd
 
 import (
 	"io"
 	"log"
 	"net/http"
-	"os"
 	"strings"
+
+	"github.com/arpanrec/secureserver/internal/ops"
 )
 
-var StorageDataDir string = "data"
-
-func EntryPoint(w http.ResponseWriter, r *http.Request) {
-	issDataDirEnv := os.Getenv("ISS_DATA_DIR")
-	if issDataDirEnv != "" {
-		StorageDataDir = issDataDirEnv
-	}
+func entryPoint(w http.ResponseWriter, r *http.Request) {
 
 	urlPath := r.URL.Path
 
@@ -42,10 +37,24 @@ func EntryPoint(w http.ResponseWriter, r *http.Request) {
 		"\nBody: ", string(body), "\nQuery: ", query)
 
 	if strings.HasPrefix(urlPath, "/tfstate/") {
-		TerraformStateHandler(string(body), rMethod, urlPath, query, w)
+		ops.TerraformStateHandler(string(body), rMethod, urlPath, query, w)
 	} else if strings.HasPrefix(urlPath, "/files/") {
-		ReadWriteFilesFromURL(string(body), rMethod, urlPath, w)
+		ops.ReadWriteFilesFromURL(string(body), rMethod, urlPath, w)
 	} else {
-		HttpResponseWriter(w, http.StatusNotFound, "")
+		w.WriteHeader(http.StatusNotFound)
+		_, err := w.Write([]byte("Not Found"))
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
+}
+
+func Runner() {
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		entryPoint(w, r)
+	})
+
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
