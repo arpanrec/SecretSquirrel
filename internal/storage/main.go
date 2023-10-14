@@ -2,6 +2,7 @@ package storage
 
 import (
 	"github.com/arpanrec/secureserver/internal/common"
+	"github.com/arpanrec/secureserver/internal/encryption"
 	"github.com/arpanrec/secureserver/internal/physical"
 	"log"
 	"sync"
@@ -31,13 +32,13 @@ func GetData(l string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	decryptMessage(&d)
+	encryption.DecryptMessage(&d)
 	return d, nil
 }
 
 func PutData(l string, d string) (bool, error) {
 	s := getStorage()
-	encryptMessage(&d)
+	encryption.EncryptMessage(&d)
 	return s.PutData(l, d)
 }
 

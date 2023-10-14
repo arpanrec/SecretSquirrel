@@ -1,4 +1,4 @@
-package storage
+package encryption
 
 import (
 	"github.com/ProtonMail/gopenpgp/v2/helper"
@@ -69,7 +69,7 @@ func setGPGInfo() openGPGInfo {
 	return gpgInfo
 }
 
-func encryptMessage(message *string) {
+func EncryptMessage(message *string) {
 	setGPGInfo()
 	armor, err := helper.EncryptMessageArmored(gpgInfo.publicKeyString, *message)
 	if err != nil {
@@ -78,7 +78,7 @@ func encryptMessage(message *string) {
 	*message = armor
 }
 
-func decryptMessage(armor *string) {
+func DecryptMessage(armor *string) {
 	setGPGInfo()
 	decrypted, err := helper.DecryptMessageArmored(gpgInfo.privateKeyString, gpgInfo.passphraseString, *armor)
 	if err != nil {

@@ -1,4 +1,4 @@
-package storage
+package encryption
 
 import (
 	"testing"
@@ -7,8 +7,8 @@ import (
 func TestAbs(t *testing.T) {
 	// encrypt plain text message using public key
 	ss := "Hello World"
-	encryptMessage(&ss)
+	EncryptMessage(&ss)
 	t.Log(ss)
-	decryptMessage(&ss)
+	DecryptMessage(&ss)
 	t.Log(ss)
 }

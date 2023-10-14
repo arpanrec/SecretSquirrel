@@ -1,12 +1,12 @@
 package cmd
 
 import (
+	"github.com/arpanrec/secureserver/internal/ops/fileserver"
+	"github.com/arpanrec/secureserver/internal/ops/tfstate"
 	"io"
 	"log"
 	"net/http"
 	"strings"
-
-	"github.com/arpanrec/secureserver/internal/ops"
 )
 
 func entryPoint(w http.ResponseWriter, r *http.Request) {
@@ -37,9 +37,9 @@ func entryPoint(w http.ResponseWriter, r *http.Request) {
 		"\nBody: ", string(body), "\nQuery: ", query)
 
 	if strings.HasPrefix(urlPath, "/tfstate/") {
-		ops.TerraformStateHandler(string(body), rMethod, urlPath, query, w)
+		tfstate.TerraformStateHandler(string(body), rMethod, urlPath, query, w)
 	} else if strings.HasPrefix(urlPath, "/files/") {
-		ops.ReadWriteFilesFromURL(string(body), rMethod, urlPath, w)
+		fileserver.ReadWriteFilesFromURL(string(body), rMethod, urlPath, w)
 	} else {
 		w.WriteHeader(http.StatusNotFound)
 		_, err := w.Write([]byte("Not Found"))

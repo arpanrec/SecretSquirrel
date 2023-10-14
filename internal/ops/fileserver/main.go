@@ -1,6 +1,7 @@
-package ops
+package fileserver
 
 import (
+	"github.com/arpanrec/secureserver/internal/common"
 	"log"
 	"net/http"
 
@@ -14,28 +15,28 @@ func ReadWriteFilesFromURL(b string, m string, filePath string, w http.ResponseW
 	case http.MethodGet:
 		d, err := storage.GetData(filePath)
 		if err != nil {
-			httpResponseWriter(w, http.StatusNotFound, "Not Found")
+			common.HttpResponseWriter(w, http.StatusNotFound, "Not Found")
 			return
 		}
-		httpResponseWriter(w, http.StatusOK, d)
+		common.HttpResponseWriter(w, http.StatusOK, d)
 		return
 	case http.MethodPut, http.MethodPost:
 		log.Println("Body: ", b)
 		_, err := storage.PutData(filePath, b)
 		if err != nil {
-			httpResponseWriter(w, http.StatusInternalServerError, "Internal Server Error")
+			common.HttpResponseWriter(w, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
-		httpResponseWriter(w, http.StatusCreated, "OK")
+		common.HttpResponseWriter(w, http.StatusCreated, "OK")
 		return
 	case http.MethodDelete:
 		err := storage.DeleteData(filePath)
 		if err != nil {
-			httpResponseWriter(w, http.StatusInternalServerError, "Internal Server Error")
+			common.HttpResponseWriter(w, http.StatusInternalServerError, "Internal Server Error")
 			return
 		}
 	default:
-		httpResponseWriter(w, http.StatusMethodNotAllowed, "Unsupported Method")
+		common.HttpResponseWriter(w, http.StatusMethodNotAllowed, "Unsupported Method")
 
 	}
 }

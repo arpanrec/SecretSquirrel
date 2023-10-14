@@ -2,7 +2,9 @@ package common
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"sync"
 )
@@ -28,4 +30,21 @@ func GetConfig() map[string]interface{} {
 	})
 	mu.Unlock()
 	return config
+}
+
+func DeleteFile(l string) (bool, error) {
+	err := os.Remove(l)
+	if err != nil {
+		log.Fatal("Error deleting file: ", err)
+		return false, err
+	}
+	return true, nil
+}
+
+func HttpResponseWriter(w http.ResponseWriter, code int, body string) {
+	w.WriteHeader(code)
+	_, err := fmt.Fprint(w, body)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
