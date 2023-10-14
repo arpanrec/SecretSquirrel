@@ -9,7 +9,7 @@ import (
 
 var pStorage physical.Storage
 
-var once = sync.Once{}
+var once = &sync.Once{}
 
 func getStorage() physical.Storage {
 	once.Do(func() {
@@ -27,11 +27,17 @@ func getStorage() physical.Storage {
 
 func GetData(l string) (string, error) {
 	s := getStorage()
-	return s.GetData(l)
+	d, err := s.GetData(l)
+	if err != nil {
+		return "", err
+	}
+	decryptMessage(&d)
+	return d, nil
 }
 
 func PutData(l string, d string) (bool, error) {
 	s := getStorage()
+	encryptMessage(&d)
 	return s.PutData(l, d)
 }
 

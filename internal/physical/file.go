@@ -9,9 +9,9 @@ import (
 	"sync"
 )
 
-var mutex = sync.Mutex{}
+var mutex = &sync.Mutex{}
 
-var once = sync.Once{}
+var once = &sync.Once{}
 
 type Storage interface {
 	GetData(l string) (string, error)
