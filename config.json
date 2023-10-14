@@ -1,0 +1,14 @@
+{
+  "encryption": {
+    "private_key_path": "/home/clouduser/Downloads/INIT_GPG_KEY",
+    "public_key_path": "/home/clouduser/Downloads/INIT_GPG_PRIVATE_KEY",
+    "private_key_password_path": "/home/clouduser/Downloads/INIT_GPG_KEY_PASSWD.txt",
+    "delete_key_files_after_startup": false
+  },
+  "storage": {
+    "type": "file",
+    "config": {
+      "path": "data"
+    }
+  }
+}
