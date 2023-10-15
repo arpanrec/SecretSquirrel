@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"fmt"
+	"github.com/arpanrec/secureserver/internal/auth"
+	"github.com/arpanrec/secureserver/internal/common"
 	"github.com/arpanrec/secureserver/internal/fileserver"
 	"github.com/arpanrec/secureserver/internal/tfstate"
 	"io"
@@ -32,20 +35,25 @@ func entryPoint(w http.ResponseWriter, r *http.Request) {
 
 	formData := r.Form
 
+	authHeader := header.Get("Authorization")
+	username, ok := auth.GetUserDetails(authHeader)
+	if !ok {
+		common.HttpResponseWriter(w, http.StatusUnauthorized, "Unauthorized")
+		return
+	}
+
 	log.Println("URL Path: ", urlPath, "\nMethod: ", rMethod, "\nHeader: ", header,
 		"\nForm Data: ", formData,
 		"\nBody: ", string(body), "\nQuery: ", query)
 
+	locationPath := fmt.Sprintf("%v/%v", username, urlPath[3:])
+
 	if strings.HasPrefix(urlPath, "/v1/tfstate/") {
-		tfstate.TerraformStateHandler(string(body), rMethod, urlPath, query, w)
+		tfstate.TerraformStateHandler(string(body), rMethod, locationPath, query, w)
 	} else if strings.HasPrefix(urlPath, "/v1/files/") {
-		fileserver.ReadWriteFilesFromURL(string(body), rMethod, urlPath, w)
+		fileserver.ReadWriteFilesFromURL(string(body), rMethod, locationPath, w)
 	} else {
-		w.WriteHeader(http.StatusNotFound)
-		_, err := w.Write([]byte("Not Found"))
-		if err != nil {
-			log.Fatal(err)
-		}
+		common.HttpResponseWriter(w, http.StatusNotFound, "Not Found")
 	}
 }
 

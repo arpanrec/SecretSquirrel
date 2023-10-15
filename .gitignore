@@ -58,3 +58,4 @@ override.tf.json
 terraform.rc
 /.terraform.lock.hcl
 data
+/http-client.private.env.json

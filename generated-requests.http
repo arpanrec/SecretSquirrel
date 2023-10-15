@@ -1,4 +1,5 @@
-PUT {{endpoint}}/files/v1/objects/a.json
+PUT {{endpoint}}/v1/files/objects/a.json
+Authorization: Basic {{username}} {{password}}
 
 {
   "name": "new namasfasfsae"
