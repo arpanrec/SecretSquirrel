@@ -12,7 +12,7 @@
     }
   },
   "users": {
-    "arpanrec": {}
+    "arpanrec": null
   },
   "pki": {
     "openssl_root_ca_key_path": "/home/clouduser/Downloads/INIT_OPENSSL_ROOT_CA_KEY",

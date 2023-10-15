@@ -1,67 +1,55 @@
 package encryption
 
 import (
+	"github.com/arpanrec/secureserver/internal/serverconfig"
 	"log"
 	"os"
 	"strings"
 	"sync"
 
 	"github.com/ProtonMail/gopenpgp/v2/helper"
-	"github.com/arpanrec/secureserver/internal/common"
 )
 
-type openGPGInfo struct {
-	privateKeyString string
-
-	publicKeyString string
-
-	passphraseString []byte
-}
-
-var gpgInfo = openGPGInfo{}
+var encryptionConfig serverconfig.EncryptionConfig
 
 var mu = &sync.Mutex{}
 var mo = &sync.Once{}
 
-func setGPGInfo() openGPGInfo {
+func setGPGInfo() serverconfig.EncryptionConfig {
 	mu.Lock()
 	mo.Do(func() {
-		gpgPrivateKeyPath := common.GetConfig()["encryption"].(map[string]interface{})["private_key_path"].(string)
-		gpgPublicKeyPath := common.GetConfig()["encryption"].(map[string]interface{})["public_key_path"].(string)
-		gpgPassphraseFilePath := common.GetConfig()["encryption"].(map[string]interface{})["private_key_password_path"].(string)
-		gpgPrivateKey, err := os.ReadFile(gpgPrivateKeyPath)
+		encryptionConfig = serverconfig.GetConfig().Encryption
+		gpgPrivateKey, err := os.ReadFile(encryptionConfig.GPGPrivateKeyPath)
 		if err != nil {
 			log.Fatalln("Error reading private key: ", err)
 		}
+		encryptionConfig.GPGPrivateKey = string(gpgPrivateKey)
 
-		gpgPublicKey, err1 := os.ReadFile(gpgPublicKeyPath)
+		gpgPublicKey, err1 := os.ReadFile(encryptionConfig.GPGPublicKeyPath)
 		if err1 != nil {
 			log.Fatalln("Error reading public key: ", err1)
 		}
+		encryptionConfig.GPGPublicKey = string(gpgPublicKey)
 
-		gpgPassphrase, err2 := os.ReadFile(gpgPassphraseFilePath)
+		gpgPassphrase, err2 := os.ReadFile(encryptionConfig.GPGPassphrasePath)
 		if err2 != nil {
 			log.Fatalln("Error reading passphrase: ", err2)
 		}
 		gpgPassphraseSanitized := strings.Split(string(gpgPassphrase), "\n")[0]
-		gpgInfo = openGPGInfo{
-			privateKeyString: string(gpgPrivateKey),
-			publicKeyString:  string(gpgPublicKey),
-			passphraseString: []byte(gpgPassphraseSanitized),
-		}
+		log.Printf("Passphrase: %s", gpgPassphraseSanitized)
+		encryptionConfig.GPGPrivateKeyPassphrase = []byte(gpgPassphraseSanitized)
 
-		deleteKeys := common.GetConfig()["encryption"].(map[string]interface{})["delete_key_files_after_startup"].(bool)
-		if deleteKeys {
+		if encryptionConfig.DeleteKeys {
 			log.Println("Deleting keys")
-			err3 := os.Remove(gpgPrivateKeyPath)
+			err3 := os.Remove(encryptionConfig.GPGPrivateKeyPath)
 			if err3 != nil {
 				log.Fatalln("Error deleting private key: ", err3)
 			}
-			err4 := os.Remove(gpgPublicKeyPath)
+			err4 := os.Remove(encryptionConfig.GPGPublicKeyPath)
 			if err4 != nil {
 				log.Fatalln("Error deleting public key: ", err4)
 			}
-			err5 := os.Remove(gpgPassphraseFilePath)
+			err5 := os.Remove(encryptionConfig.GPGPassphrasePath)
 			if err5 != nil {
 				log.Fatalln("Error deleting passphrase: ", err5)
 			}
@@ -69,12 +57,12 @@ func setGPGInfo() openGPGInfo {
 	})
 
 	mu.Unlock()
-	return gpgInfo
+	return encryptionConfig
 }
 
 func EncryptMessage(message *string) error {
 	setGPGInfo()
-	armor, err := helper.EncryptMessageArmored(gpgInfo.publicKeyString, *message)
+	armor, err := helper.EncryptMessageArmored(encryptionConfig.GPGPublicKey, *message)
 	if err != nil {
 		log.Println("Error encrypting message: ", err)
 	}
@@ -84,7 +72,7 @@ func EncryptMessage(message *string) error {
 
 func DecryptMessage(armor *string) error {
 	setGPGInfo()
-	decrypted, err := helper.DecryptMessageArmored(gpgInfo.privateKeyString, gpgInfo.passphraseString, *armor)
+	decrypted, err := helper.DecryptMessageArmored(encryptionConfig.GPGPrivateKey, encryptionConfig.GPGPrivateKeyPassphrase, *armor)
 	if err != nil {
 		log.Println("Error decrypting message: ", err)
 	}

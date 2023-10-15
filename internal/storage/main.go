@@ -4,9 +4,9 @@ import (
 	"log"
 	"sync"
 
-	"github.com/arpanrec/secureserver/internal/common"
 	"github.com/arpanrec/secureserver/internal/encryption"
 	"github.com/arpanrec/secureserver/internal/physical"
+	"github.com/arpanrec/secureserver/internal/serverconfig"
 )
 
 var pStorage physical.Storage
@@ -15,11 +15,14 @@ var once = &sync.Once{}
 
 func getStorage() physical.Storage {
 	once.Do(func() {
-		storageType := common.GetConfig()["storage"].(map[string]interface{})["type"].(string)
+		storageConfig := serverconfig.GetConfig().Storage
+		storageType := storageConfig.StorageType
 		log.Print("Storage type set to ", storageType)
 		switch storageType {
 		case "file":
-			pStorage = physical.FileStorageConfig{}
+			pStorage = physical.FileStorageConfig{
+				Path: storageConfig.Config["path"].(string),
+			}
 		default:
 			log.Println("Error Invalid storage type ", storageType)
 		}

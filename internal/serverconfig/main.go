@@ -13,10 +13,13 @@ var mo = &sync.Once{}
 var mu = &sync.Mutex{}
 
 type EncryptionConfig struct {
-	GPGPrivateKeyPath string `json:"private_key_path"`
-	GPGPublicKeyPath  string `json:"public_key_path"`
-	GPGPassphrasePath string `json:"private_key_password_path"`
-	DeleteKeys        bool   `json:"delete_key_files_after_startup"`
+	GPGPrivateKeyPath       string `json:"private_key_path"`
+	GPGPublicKeyPath        string `json:"public_key_path"`
+	GPGPassphrasePath       string `json:"private_key_password_path"`
+	GPGPrivateKey           string `json:"private_key"`
+	GPGPublicKey            string `json:"public_key"`
+	GPGPrivateKeyPassphrase []byte `json:"private_key_password"`
+	DeleteKeys              bool   `json:"delete_key_files_after_startup"`
 }
 
 type PkiConfig struct {
