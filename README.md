@@ -1,5 +1,16 @@
 # Utils Server
 
+## User Space
+
+Data is only accessible to the user who created it.
+
+### Authentication
+
+Authentication is done via basic auth header `Authorization: Basic <base64 encoded username:password>`.
+
+- username: Github username (not email)
+- password: Github personal access token.
+
 ## Terraform HTTP Backend
 
 This can be used as a backend for terraform.
