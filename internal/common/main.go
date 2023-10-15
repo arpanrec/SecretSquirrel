@@ -35,7 +35,7 @@ func GetConfig() map[string]interface{} {
 func DeleteFile(l string) (bool, error) {
 	err := os.Remove(l)
 	if err != nil {
-		log.Fatal("Error deleting file: ", err)
+		log.Fatalln("Error deleting file: ", err)
 		return false, err
 	}
 	return true, nil
@@ -45,6 +45,6 @@ func HttpResponseWriter(w http.ResponseWriter, code int, body string) {
 	w.WriteHeader(code)
 	_, err := fmt.Fprint(w, body)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalln("Error writing response: ", err)
 	}
 }

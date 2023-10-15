@@ -1,12 +1,13 @@
 package physical
 
 import (
-	"github.com/arpanrec/secureserver/internal/common"
 	"log"
 	"os"
 	"path"
 	"path/filepath"
 	"sync"
+
+	"github.com/arpanrec/secureserver/internal/common"
 )
 
 var mutex = &sync.Mutex{}
@@ -44,12 +45,12 @@ func (fs FileStorage) PutData(Location string, Data string) (bool, error) {
 	dir := filepath.Dir(p)
 	errMakeDir := os.MkdirAll(dir, 0755)
 	if errMakeDir != nil {
-		log.Fatal("Error creating directory: ", errMakeDir)
+		log.Fatalln("Error creating directory: ", errMakeDir)
 		return false, errMakeDir
 	}
 	errWriteFile := os.WriteFile(p, []byte(Data), 0644)
 	if errWriteFile != nil {
-		log.Fatal("Error writing file: ", errWriteFile)
+		log.Fatalln("Error writing file: ", errWriteFile)
 		return false, errWriteFile
 	}
 	return true, nil

@@ -3,12 +3,13 @@ package auth
 import (
 	"encoding/base64"
 	"encoding/json"
-	"github.com/arpanrec/secureserver/internal/common"
 	"io"
 	"log"
 	"net/http"
 	"strings"
 	"sync"
+
+	"github.com/arpanrec/secureserver/internal/common"
 )
 
 var (
@@ -53,24 +54,24 @@ func getGithubUserDetails(gPAT string) (string, bool) {
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", "https://api.github.com/user", nil)
 	if err != nil {
-		log.Fatal("Error creating request: ", err)
+		log.Fatalln("Error creating request: ", err)
 		return "", false
 	}
 	req.Header.Add("Authorization", "token "+gPAT)
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatal("Error sending request: ", err)
+		log.Fatalln("Error sending request: ", err)
 		return "", false
 	}
 	githubResBody, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal("Error reading response: ", err)
+		log.Fatalln("Error reading response: ", err)
 		return "", false
 	}
 	var githubResp map[string]interface{}
 	ok := json.Unmarshal(githubResBody, &githubResp)
 	if ok != nil {
-		log.Fatal("Error unmarshalling response: ", ok)
+		log.Fatalln("Error unmarshalling response: ", ok)
 		return "", false
 	}
 	log.Println("Github User Details: ", githubResp["login"].(string))

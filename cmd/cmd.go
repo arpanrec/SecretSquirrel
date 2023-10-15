@@ -2,14 +2,15 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/arpanrec/secureserver/internal/auth"
-	"github.com/arpanrec/secureserver/internal/common"
-	"github.com/arpanrec/secureserver/internal/fileserver"
-	"github.com/arpanrec/secureserver/internal/tfstate"
 	"io"
 	"log"
 	"net/http"
 	"strings"
+
+	"github.com/arpanrec/secureserver/internal/auth"
+	"github.com/arpanrec/secureserver/internal/common"
+	"github.com/arpanrec/secureserver/internal/fileserver"
+	"github.com/arpanrec/secureserver/internal/tfstate"
 )
 
 func entryPoint(w http.ResponseWriter, r *http.Request) {
@@ -20,11 +21,11 @@ func entryPoint(w http.ResponseWriter, r *http.Request) {
 	defer func(Body io.ReadCloser) {
 		errBodyClose := Body.Close()
 		if errBodyClose != nil {
-			log.Fatal(errBodyClose)
+			log.Fatalln("Error closing body: ", errBodyClose)
 		}
 	}(r.Body)
 	if errReadAll != nil {
-		log.Fatal(errReadAll)
+		log.Fatalln("Error reading body: ", errReadAll)
 	}
 
 	rMethod := r.Method
