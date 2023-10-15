@@ -32,17 +32,14 @@ type StorageConfig struct {
 	Config      map[string]interface{} `json:"config"`
 }
 
-type UsersConfig struct {
-	UserNames []string `json:"user_names"`
-}
-
 type UserConfig struct {
 }
 
 type MasterConfig struct {
-	Encryption EncryptionConfig `json:"encryption"`
-	PkiConfig  PkiConfig        `json:"pki"`
-	Storage    StorageConfig    `json:"storage"`
+	Encryption EncryptionConfig      `json:"encryption"`
+	PkiConfig  PkiConfig             `json:"pki"`
+	Storage    StorageConfig         `json:"storage"`
+	UserDb     map[string]UserConfig `json:"users"`
 }
 
 func GetConfig() MasterConfig {
