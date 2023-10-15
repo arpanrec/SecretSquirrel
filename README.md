@@ -34,6 +34,44 @@ This can be used as a file server.
 
 URL format: `<protocol>://<host>:<port>/v1/files/<path>`
 
+## Configuration
+
+Configuration is done via config json file.
+
+File location can be set via environment variable `SECURE_SERVER_CONFIG_FILE_PATH`.
+
+```json
+{
+  "encryption": {
+    "private_key_path": "Path to GPG private key",
+    "public_key_path": "Path to GPG public key",
+    "private_key_password_path": "Password file for GPG private key",
+    "delete_key_files_after_startup": "Boolean, delete key files after startup"
+  },
+  "storage": {
+    "type": "Storage type, currently only supports: file, s3",
+    "config": "Storage config",
+  },
+  "users": {
+    "githubusername1": {},
+    "githubusername2": {}
+  }
+}
+```
+
+### Configuration: File Storage
+
+```json
+{
+  "storage": {
+    "type": "file",
+    "config": {
+      "path": "Path to storage directory"
+    }
+  }
+}
+```
+
 ## Deployment
 
 ### Deployment: Gitlab Runner
