@@ -37,9 +37,9 @@ func entryPoint(w http.ResponseWriter, r *http.Request) {
 	formData := r.Form
 
 	authHeader := header.Get("Authorization")
-	username, ok := auth.GetUserDetails(authHeader)
-	if !ok {
-		common.HttpResponseWriter(w, http.StatusUnauthorized, "Unauthorized")
+	username, err := auth.GetUserDetails(authHeader)
+	if err != nil {
+		common.HttpResponseWriter(w, http.StatusUnauthorized, "Unauthorized : "+err.Error())
 		return
 	}
 
