@@ -18,7 +18,11 @@ func GetConfig() map[string]interface{} {
 	mu.Lock()
 	mo.Do(func() {
 		log.Printf("Setting config from %v", "config.json")
-		configJson, er := os.ReadFile("/home/clouduser/workspace/secureserver/config.json")
+		configFilePath := os.Getenv("SECURE_SERVER_CONFIG_FILE_PATH")
+		if configFilePath == "" {
+			configFilePath = "/home/clouduser/workspace/secureserver/config.json"
+		}
+		configJson, er := os.ReadFile(configFilePath)
 		if er != nil {
 			log.Println("Error reading config file", er)
 		}
