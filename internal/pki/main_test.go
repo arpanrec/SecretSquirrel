@@ -1,10 +1,11 @@
 package pki
 
 import (
-	"github.com/arpanrec/secureserver/internal/serverconfig"
 	"log"
 	"os/exec"
 	"testing"
+
+	"github.com/arpanrec/secureserver/internal/serverconfig"
 )
 
 func TestCertCa(t *testing.T) {
@@ -15,7 +16,7 @@ func TestCertCa(t *testing.T) {
 		"-in", pkiJsonSettingsString.CaPrivateKeyFile,
 		"-passin", "file:"+pkiJsonSettingsString.CaPrivateKeyPasswordFile,
 		"-passout", "pass:\"\"",
-		"-out", pkiJsonSettingsString.CaPrivateKeyNopassFile)
+		"-out", pkiJsonSettingsString.CaPrivateKeyNoPasswordFile)
 	if err := removePassCmd.Run(); err != nil {
 		log.Fatal(err)
 	}
