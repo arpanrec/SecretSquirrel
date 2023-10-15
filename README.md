@@ -8,8 +8,8 @@ Data is only accessible to the user who created it.
 
 Authentication is done via basic auth header `Authorization: Basic <base64 encoded username:password>`.
 
-- username: Github username (not email)
-- password: Github personal access token.
+- username: GitHub username (not email)
+- password: GitHub personal access token.
 
 ## Terraform HTTP Backend
 
@@ -50,7 +50,7 @@ File location can be set via environment variable `SECURE_SERVER_CONFIG_FILE_PAT
   },
   "storage": {
     "type": "Storage type, currently only supports: file, s3",
-    "config": "Storage config",
+    "config": "Storage config"
   },
   "users": {
     "githubusername1": {},
@@ -84,7 +84,7 @@ Upload the `.env` file to Gitlab Secure Files. (Gitlab Project -> Settings -> CI
 Deployment is done via [gitlab-runner](https://docs.gitlab.com/runner/install/linux-repository.html).
 Add the Server as gitlab-runner with shell executor, also make sure gitlab runner has root access.
 
-- Please check the [gitlab-runner](https://docs.gitlab.com/runner/install/linux-repository.html) for latest installation instructions.
+- Please check the [gitlab-runner](https://docs.gitlab.com/runner/install/linux-repository.html) for the latest installation instructions.
 
 ```bash
 echo "gitlab-runner ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/010-gitlab-runner >/dev/null
@@ -140,16 +140,17 @@ sudo rm -rf /etc/gitlab-runner
 
 Deployment is locked with branch name `main`, and when this is not a scheduled job.
 
-### Deployment: Github Actions
+### Deployment: GitHub Actions
 
-Upload the base64 encoded `.env` file to Github Secrets as `ENVIRONMENT_FILE`. (Github Project -> Settings -> Secrets -> New repository secret)
+Upload the base64 encoded `.env` file to GitHub Secrets as `ENVIRONMENT_FILE`. (GitHub Project -> Settings -> Secrets -> New repository secret)
 
 <details>
   <summary>Github Actions Self Hosted Runner</summary>
 
-Deployment is done via [Github Actions Self Hosted Runner](https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners). Make sure Github Actions Self Hosted Runner has NOPASSWD root access.
+Deployment is done via [GitHub Actions Self Hosted Runner](https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners). 
+Make sure GitHub Actions Self Hosted Runner has NOPASSWD root access.
 
-- Install Github Actions Self Hosted Runner
+- Install GitHub Actions Self Hosted Runner
 
 ```bash
 sudo useradd -m -s /bin/bash actions-runner
@@ -165,7 +166,7 @@ sudo ./svc.sh install
 sudo ./svc.sh start
 ```
 
-- Remove Github Actions Self Hosted Runner
+- Remove GitHub Actions Self Hosted Runner
 
 ```bash
 sudo ./svc.sh stop
@@ -198,9 +199,9 @@ Select target branch or tag: main
 Activated: true
 ```
 
-### Backup: Github Actions
+### Backup: GitHub Actions
 
-Upload the base64 encoded `.env` file to Github Secrets as `ENVIRONMENT_FILE`. (Github Project -> Settings -> Secrets -> New repository secret)
+Upload the base64 encoded `.env` file to GitHub Secrets as `ENVIRONMENT_FILE`. (GitHub Project -> Settings -> Secrets -> New repository secret)
 
 - For runner installation, [check this](#deployment-github-actions).
 

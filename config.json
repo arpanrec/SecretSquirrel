@@ -12,9 +12,6 @@
     }
   },
   "users": {
-    "arpanrec": {
-      "admin": true
-    },
-    "arpan": {}
+    "arpanrec": {}
   }
 }

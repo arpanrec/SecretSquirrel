@@ -3,6 +3,7 @@ package encryption
 import (
 	"log"
 	"os"
+	"strings"
 	"sync"
 
 	"github.com/ProtonMail/gopenpgp/v2/helper"
@@ -42,10 +43,11 @@ func setGPGInfo() openGPGInfo {
 		if err2 != nil {
 			log.Println("Error reading passphrase: ", err2)
 		}
+		gpgPassphraseSanitized := strings.Split(string(gpgPassphrase), "\n")[0]
 		gpgInfo = openGPGInfo{
 			privateKeyString: string(gpgPrivateKey),
 			publicKeyString:  string(gpgPublicKey),
-			passphraseString: gpgPassphrase,
+			passphraseString: []byte(gpgPassphraseSanitized),
 		}
 
 		deleteKeys := common.GetConfig()["encryption"].(map[string]interface{})["delete_key_files_after_startup"].(bool)
