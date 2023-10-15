@@ -27,9 +27,22 @@ type PkiConfig struct {
 	DeleteKeys               bool   `json:"delete_key_files_after_startup"`
 }
 
+type StorageConfig struct {
+	StorageType string                 `json:"type"`
+	Config      map[string]interface{} `json:"config"`
+}
+
+type UsersConfig struct {
+	UserNames []string `json:"user_names"`
+}
+
+type UserConfig struct {
+}
+
 type MasterConfig struct {
 	Encryption EncryptionConfig `json:"encryption"`
 	PkiConfig  PkiConfig        `json:"pki"`
+	Storage    StorageConfig    `json:"storage"`
 }
 
 func GetConfig() MasterConfig {

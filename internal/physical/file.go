@@ -17,6 +17,10 @@ var mutexPhysicalFile = &sync.Mutex{}
 
 var oncePhysicalFile = &sync.Once{}
 
+type FileStorageConfig struct {
+	Path string `json:"path"`
+}
+
 func getPath() string {
 	oncePhysicalFile.Do(func() {
 		fileStoragePath = common.GetConfig()["storage"].(map[string]interface{})["config"].(map[string]interface{})["path"].(string)
