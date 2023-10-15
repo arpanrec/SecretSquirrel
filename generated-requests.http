@@ -6,8 +6,9 @@ Authorization: Basic {{username}} {{password}}
 }
 
 ###
-GET {{endpoint}}/files/v1/objects/a.json
-
+GET {{endpoint}}/v1/files/objects/a.json
+Authorization: Basic {{username}} {{password}}
 ###
 
-GET {{endpoint}}/tfstate/test1
+GET {{endpoint}}/v1/tfstate/test1
+Authorization: Basic {{username}} {{password}}
