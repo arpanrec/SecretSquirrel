@@ -19,19 +19,19 @@ func setGPGInfo() serverconfig.EncryptionConfig {
 	mu.Lock()
 	mo.Do(func() {
 		encryptionConfig = serverconfig.GetConfig().Encryption
-		gpgPrivateKey, err := os.ReadFile(encryptionConfig.GPGPrivateKeyPath)
+		gpgPrivateKey, err := os.ReadFile(encryptionConfig.GPGPrivateKeyFile)
 		if err != nil {
 			log.Fatalln("Error reading private key: ", err)
 		}
 		encryptionConfig.GPGPrivateKey = string(gpgPrivateKey)
 
-		gpgPublicKey, err1 := os.ReadFile(encryptionConfig.GPGPublicKeyPath)
+		gpgPublicKey, err1 := os.ReadFile(encryptionConfig.GPGPublicKeyFile)
 		if err1 != nil {
 			log.Fatalln("Error reading public key: ", err1)
 		}
 		encryptionConfig.GPGPublicKey = string(gpgPublicKey)
 
-		gpgPassphrase, err2 := os.ReadFile(encryptionConfig.GPGPassphrasePath)
+		gpgPassphrase, err2 := os.ReadFile(encryptionConfig.GPGPassphraseFile)
 		if err2 != nil {
 			log.Fatalln("Error reading passphrase: ", err2)
 		}
@@ -41,15 +41,15 @@ func setGPGInfo() serverconfig.EncryptionConfig {
 
 		if encryptionConfig.DeleteKeys {
 			log.Println("Deleting keys")
-			err3 := os.Remove(encryptionConfig.GPGPrivateKeyPath)
+			err3 := os.Remove(encryptionConfig.GPGPrivateKeyFile)
 			if err3 != nil {
 				log.Fatalln("Error deleting private key: ", err3)
 			}
-			err4 := os.Remove(encryptionConfig.GPGPublicKeyPath)
+			err4 := os.Remove(encryptionConfig.GPGPublicKeyFile)
 			if err4 != nil {
 				log.Fatalln("Error deleting public key: ", err4)
 			}
-			err5 := os.Remove(encryptionConfig.GPGPassphrasePath)
+			err5 := os.Remove(encryptionConfig.GPGPassphraseFile)
 			if err5 != nil {
 				log.Fatalln("Error deleting passphrase: ", err5)
 			}

@@ -13,21 +13,21 @@ var mo = &sync.Once{}
 var mu = &sync.Mutex{}
 
 type EncryptionConfig struct {
-	GPGPrivateKeyPath       string `json:"private_key_path"`
-	GPGPublicKeyPath        string `json:"public_key_path"`
-	GPGPassphrasePath       string `json:"private_key_password_path"`
-	GPGPrivateKey           string `json:"private_key"`
-	GPGPublicKey            string `json:"public_key"`
-	GPGPrivateKeyPassphrase []byte `json:"private_key_password"`
+	GPGPrivateKeyFile       string `json:"gpg_private_key_file"`
+	GPGPublicKeyFile        string `json:"gpg_public_key_file"`
+	GPGPassphraseFile       string `json:"gpg_private_key_password_file"`
+	GPGPrivateKey           string `json:"gpg_private_key"`
+	GPGPublicKey            string `json:"gpg_public_key"`
+	GPGPrivateKeyPassphrase []byte `json:"gpg_private_key_password"`
 	DeleteKeys              bool   `json:"delete_key_files_after_startup"`
 }
 
 type PkiConfig struct {
-	CaCertFile               string `json:"openssl_root_ca_cert_path"`
-	CaPrivateKeyFile         string `json:"openssl_root_ca_key_path"`
-	CaPrivateKeyPasswordFile string `json:"openssl_root_ca_key_password_path"`
-	CaPrivateKeyNopassFile   string `json:"openssl_root_ca_key_nopasswd_path"`
-	DeleteKeys               bool   `json:"delete_key_files_after_startup"`
+	CaCertFile                 string `json:"openssl_root_ca_cert_file"`
+	CaPrivateKeyFile           string `json:"openssl_root_ca_key_file"`
+	CaPrivateKeyPasswordFile   string `json:"openssl_root_ca_key_password_file"`
+	CaPrivateKeyNoPasswordFile string `json:"openssl_root_ca_key_NoPassword_file"`
+	DeleteKeys                 bool   `json:"delete_key_files_after_startup"`
 }
 
 type StorageConfig struct {
@@ -59,7 +59,7 @@ func GetConfig() MasterConfig {
 		}
 		err := json.Unmarshal(configJson, &masterServerConfig)
 		if err != nil {
-			log.Fatalln("Error unmarshalling config file ", err)
+			log.Fatalln("Error Unmarshal config file ", err)
 		}
 		log.Printf("Config set successfully %v\n", masterServerConfig)
 	})

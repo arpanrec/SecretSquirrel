@@ -57,9 +57,9 @@ File location can be set via environment variable `SECURE_SERVER_CONFIG_FILE_PAT
 ```json
 {
   "encryption": {
-    "private_key_path": "Path to GPG private key",
+    "gpg_private_key_path": "Path to GPG private key",
     "public_key_path": "Path to GPG public key",
-    "private_key_password_path": "Password file for GPG private key",
+    "gpg_private_key_password_path": "Password file for GPG private key",
     "delete_key_files_after_startup": "Boolean, delete key files after startup"
   },
   "storage": {
@@ -161,7 +161,7 @@ Upload the base64 encoded `.env` file to GitHub Secrets as `ENVIRONMENT_FILE`. (
 <details>
   <summary>Github Actions Self Hosted Runner</summary>
 
-Deployment is done via [GitHub Actions Self Hosted Runner](https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners). 
+Deployment is done via [GitHub Actions Self Hosted Runner](https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners).
 Make sure GitHub Actions Self Hosted Runner has NOPASSWD root access.
 
 - Install GitHub Actions Self Hosted Runner
