@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"github.com/arpanrec/secureserver/internal/ops/fileserver"
-	"github.com/arpanrec/secureserver/internal/ops/tfstate"
+	"github.com/arpanrec/secureserver/internal/fileserver"
+	"github.com/arpanrec/secureserver/internal/tfstate"
 	"io"
 	"log"
 	"net/http"
@@ -36,9 +36,9 @@ func entryPoint(w http.ResponseWriter, r *http.Request) {
 		"\nForm Data: ", formData,
 		"\nBody: ", string(body), "\nQuery: ", query)
 
-	if strings.HasPrefix(urlPath, "/tfstate/") {
+	if strings.HasPrefix(urlPath, "/v1/tfstate/") {
 		tfstate.TerraformStateHandler(string(body), rMethod, urlPath, query, w)
-	} else if strings.HasPrefix(urlPath, "/files/") {
+	} else if strings.HasPrefix(urlPath, "/v1/files/") {
 		fileserver.ReadWriteFilesFromURL(string(body), rMethod, urlPath, w)
 	} else {
 		w.WriteHeader(http.StatusNotFound)
