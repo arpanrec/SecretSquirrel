@@ -21,11 +21,11 @@ func entryPoint(w http.ResponseWriter, r *http.Request) {
 	defer func(Body io.ReadCloser) {
 		errBodyClose := Body.Close()
 		if errBodyClose != nil {
-			log.Fatalln("Error closing body: ", errBodyClose)
+			log.Println("Error closing body: ", errBodyClose)
 		}
 	}(r.Body)
 	if errReadAll != nil {
-		log.Fatalln("Error reading body: ", errReadAll)
+		log.Println("Error reading body: ", errReadAll)
 	}
 
 	rMethod := r.Method

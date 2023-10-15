@@ -1,11 +1,12 @@
 package encryption
 
 import (
-	"github.com/ProtonMail/gopenpgp/v2/helper"
-	"github.com/arpanrec/secureserver/internal/common"
 	"log"
 	"os"
 	"sync"
+
+	"github.com/ProtonMail/gopenpgp/v2/helper"
+	"github.com/arpanrec/secureserver/internal/common"
 )
 
 type openGPGInfo struct {
@@ -29,17 +30,17 @@ func setGPGInfo() openGPGInfo {
 		gpgPassphraseFilePath := common.GetConfig()["encryption"].(map[string]interface{})["private_key_password_path"].(string)
 		gpgPrivateKey, err := os.ReadFile(gpgPrivateKeyPath)
 		if err != nil {
-			log.Fatalln("Error reading private key: ", err)
+			log.Println("Error reading private key: ", err)
 		}
 
 		gpgPublicKey, err1 := os.ReadFile(gpgPublicKeyPath)
 		if err1 != nil {
-			log.Fatalln("Error reading public key: ", err1)
+			log.Println("Error reading public key: ", err1)
 		}
 
 		gpgPassphrase, err2 := os.ReadFile(gpgPassphraseFilePath)
 		if err2 != nil {
-			log.Fatalln("Error reading passphrase: ", err2)
+			log.Println("Error reading passphrase: ", err2)
 		}
 		gpgInfo = openGPGInfo{
 			privateKeyString: string(gpgPrivateKey),
@@ -52,15 +53,15 @@ func setGPGInfo() openGPGInfo {
 			log.Println("Deleting keys")
 			err3 := os.Remove(gpgPrivateKeyPath)
 			if err3 != nil {
-				log.Fatalln("Error deleting private key: ", err3)
+				log.Println("Error deleting private key: ", err3)
 			}
 			err4 := os.Remove(gpgPublicKeyPath)
 			if err4 != nil {
-				log.Fatalln("Error deleting public key: ", err4)
+				log.Println("Error deleting public key: ", err4)
 			}
 			err5 := os.Remove(gpgPassphraseFilePath)
 			if err5 != nil {
-				log.Fatalln("Error deleting passphrase: ", err5)
+				log.Println("Error deleting passphrase: ", err5)
 			}
 		}
 	})
@@ -73,7 +74,7 @@ func EncryptMessage(message *string) error {
 	setGPGInfo()
 	armor, err := helper.EncryptMessageArmored(gpgInfo.publicKeyString, *message)
 	if err != nil {
-		log.Fatalln("Error encrypting message: ", err)
+		log.Println("Error encrypting message: ", err)
 	}
 	*message = armor
 	return err
@@ -83,7 +84,7 @@ func DecryptMessage(armor *string) error {
 	setGPGInfo()
 	decrypted, err := helper.DecryptMessageArmored(gpgInfo.privateKeyString, gpgInfo.passphraseString, *armor)
 	if err != nil {
-		log.Fatalln("Error decrypting message: ", err)
+		log.Println("Error decrypting message: ", err)
 	}
 	*armor = decrypted
 	return err

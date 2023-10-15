@@ -45,12 +45,12 @@ func (fs FileStorage) PutData(Location string, Data string) (bool, error) {
 	dir := filepath.Dir(p)
 	errMakeDir := os.MkdirAll(dir, 0755)
 	if errMakeDir != nil {
-		log.Fatalln("Error creating directory: ", errMakeDir)
+		log.Println("Error creating directory: ", errMakeDir)
 		return false, errMakeDir
 	}
 	errWriteFile := os.WriteFile(p, []byte(Data), 0644)
 	if errWriteFile != nil {
-		log.Fatalln("Error writing file: ", errWriteFile)
+		log.Println("Error writing file: ", errWriteFile)
 		return false, errWriteFile
 	}
 	return true, nil
