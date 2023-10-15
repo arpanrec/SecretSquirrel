@@ -29,17 +29,17 @@ func setGPGInfo() openGPGInfo {
 		gpgPassphraseFilePath := common.GetConfig()["encryption"].(map[string]interface{})["private_key_password_path"].(string)
 		gpgPrivateKey, err := os.ReadFile(gpgPrivateKeyPath)
 		if err != nil {
-			log.Panicln("Error reading private key: ", err)
+			log.Fatalln("Error reading private key: ", err)
 		}
 
 		gpgPublicKey, err1 := os.ReadFile(gpgPublicKeyPath)
 		if err1 != nil {
-			log.Panicln("Error reading public key: ", err1)
+			log.Fatalln("Error reading public key: ", err1)
 		}
 
 		gpgPassphrase, err2 := os.ReadFile(gpgPassphraseFilePath)
 		if err2 != nil {
-			log.Panicln("Error reading passphrase: ", err2)
+			log.Fatalln("Error reading passphrase: ", err2)
 		}
 		gpgInfo = openGPGInfo{
 			privateKeyString: string(gpgPrivateKey),
@@ -52,15 +52,15 @@ func setGPGInfo() openGPGInfo {
 			log.Println("Deleting keys")
 			err3 := os.Remove(gpgPrivateKeyPath)
 			if err3 != nil {
-				log.Panicln("Error deleting private key: ", err3)
+				log.Fatalln("Error deleting private key: ", err3)
 			}
 			err4 := os.Remove(gpgPublicKeyPath)
 			if err4 != nil {
-				log.Panicln("Error deleting public key: ", err4)
+				log.Fatalln("Error deleting public key: ", err4)
 			}
 			err5 := os.Remove(gpgPassphraseFilePath)
 			if err5 != nil {
-				log.Panicln("Error deleting passphrase: ", err5)
+				log.Fatalln("Error deleting passphrase: ", err5)
 			}
 		}
 	})
@@ -69,20 +69,22 @@ func setGPGInfo() openGPGInfo {
 	return gpgInfo
 }
 
-func EncryptMessage(message *string) {
+func EncryptMessage(message *string) error {
 	setGPGInfo()
 	armor, err := helper.EncryptMessageArmored(gpgInfo.publicKeyString, *message)
 	if err != nil {
-		log.Panicln("Error encrypting message: ", err)
+		log.Fatalln("Error encrypting message: ", err)
 	}
 	*message = armor
+	return err
 }
 
-func DecryptMessage(armor *string) {
+func DecryptMessage(armor *string) error {
 	setGPGInfo()
 	decrypted, err := helper.DecryptMessageArmored(gpgInfo.privateKeyString, gpgInfo.passphraseString, *armor)
 	if err != nil {
-		log.Panicln("Error decrypting message: ", err)
+		log.Fatalln("Error decrypting message: ", err)
 	}
 	*armor = decrypted
+	return err
 }

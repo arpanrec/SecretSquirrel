@@ -20,7 +20,7 @@ func getStorage() physical.Storage {
 		case "file":
 			pStorage = physical.FileStorage{}
 		default:
-			log.Panicf("Invalid storage type %v\n", storageType)
+			log.Fatalln("Invalid storage type ", storageType)
 		}
 	})
 	return pStorage
@@ -32,13 +32,19 @@ func GetData(l string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	encryption.DecryptMessage(&d)
+	e := encryption.DecryptMessage(&d)
+	if e != nil {
+		return "", e
+	}
 	return d, nil
 }
 
 func PutData(l string, d string) (bool, error) {
 	s := getStorage()
-	encryption.EncryptMessage(&d)
+	err := encryption.EncryptMessage(&d)
+	if err != nil {
+		return false, err
+	}
 	return s.PutData(l, d)
 }
 

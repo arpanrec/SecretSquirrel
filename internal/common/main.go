@@ -20,11 +20,11 @@ func GetConfig() map[string]interface{} {
 		log.Printf("Setting config from %v", "config.json")
 		configJson, er := os.ReadFile("/home/clouduser/workspace/secureserver/config.json")
 		if er != nil {
-			log.Panicf("Error reading config file %v", er)
+			log.Fatalln("Error reading config file", er)
 		}
 		err := json.Unmarshal(configJson, &config)
 		if err != nil {
-			log.Panicf("Error unmarshalling config file %v", err)
+			log.Fatalln("Error unmarshalling config file ", err)
 		}
 		log.Printf("Config set successfully %v\n", config)
 	})
