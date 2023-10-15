@@ -1,12 +1,16 @@
 package cmd
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"strings"
 
-	"github.com/arpanrec/secureserver/internal/ops"
+	"github.com/arpanrec/secureserver/internal/auth"
+	"github.com/arpanrec/secureserver/internal/common"
+	"github.com/arpanrec/secureserver/internal/fileserver"
+	"github.com/arpanrec/secureserver/internal/tfstate"
 )
 
 func entryPoint(w http.ResponseWriter, r *http.Request) {
@@ -17,11 +21,11 @@ func entryPoint(w http.ResponseWriter, r *http.Request) {
 	defer func(Body io.ReadCloser) {
 		errBodyClose := Body.Close()
 		if errBodyClose != nil {
-			log.Fatal(errBodyClose)
+			log.Println("Error closing body: ", errBodyClose)
 		}
 	}(r.Body)
 	if errReadAll != nil {
-		log.Fatal(errReadAll)
+		log.Println("Error reading body: ", errReadAll)
 	}
 
 	rMethod := r.Method
@@ -32,20 +36,25 @@ func entryPoint(w http.ResponseWriter, r *http.Request) {
 
 	formData := r.Form
 
+	authHeader := header.Get("Authorization")
+	username, ok := auth.GetUserDetails(authHeader)
+	if !ok {
+		common.HttpResponseWriter(w, http.StatusUnauthorized, "Unauthorized")
+		return
+	}
+
 	log.Println("URL Path: ", urlPath, "\nMethod: ", rMethod, "\nHeader: ", header,
 		"\nForm Data: ", formData,
 		"\nBody: ", string(body), "\nQuery: ", query)
 
-	if strings.HasPrefix(urlPath, "/tfstate/") {
-		ops.TerraformStateHandler(string(body), rMethod, urlPath, query, w)
-	} else if strings.HasPrefix(urlPath, "/files/") {
-		ops.ReadWriteFilesFromURL(string(body), rMethod, urlPath, w)
+	locationPath := fmt.Sprintf("%v/%v", username, urlPath[3:])
+
+	if strings.HasPrefix(urlPath, "/v1/tfstate/") {
+		tfstate.TerraformStateHandler(string(body), rMethod, locationPath, query, w)
+	} else if strings.HasPrefix(urlPath, "/v1/files/") {
+		fileserver.ReadWriteFilesFromURL(string(body), rMethod, locationPath, w)
 	} else {
-		w.WriteHeader(http.StatusNotFound)
-		_, err := w.Write([]byte("Not Found"))
-		if err != nil {
-			log.Fatal(err)
-		}
+		common.HttpResponseWriter(w, http.StatusNotFound, "Not Found")
 	}
 }
 

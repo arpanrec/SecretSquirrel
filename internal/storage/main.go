@@ -1,10 +1,12 @@
 package storage
 
 import (
-	"github.com/arpanrec/secureserver/internal/common"
-	"github.com/arpanrec/secureserver/internal/physical"
 	"log"
 	"sync"
+
+	"github.com/arpanrec/secureserver/internal/common"
+	"github.com/arpanrec/secureserver/internal/encryption"
+	"github.com/arpanrec/secureserver/internal/physical"
 )
 
 var pStorage physical.Storage
@@ -19,7 +21,7 @@ func getStorage() physical.Storage {
 		case "file":
 			pStorage = physical.FileStorage{}
 		default:
-			log.Panicf("Invalid storage type %v\n", storageType)
+			log.Println("Error Invalid storage type ", storageType)
 		}
 	})
 	return pStorage
@@ -31,13 +33,20 @@ func GetData(l string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	decryptMessage(&d)
+	e := encryption.DecryptMessage(&d)
+	if e != nil {
+		log.Println("Error while getting data while decrypting message: ", e)
+		return "", e
+	}
 	return d, nil
 }
 
 func PutData(l string, d string) (bool, error) {
 	s := getStorage()
-	encryptMessage(&d)
+	err := encryption.EncryptMessage(&d)
+	if err != nil {
+		return false, err
+	}
 	return s.PutData(l, d)
 }
 

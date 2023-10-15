@@ -10,5 +10,11 @@
     "config": {
       "path": "data"
     }
+  },
+  "users": {
+    "arpanrec": {
+      "admin": true
+    },
+    "arpan": {}
   }
 }
