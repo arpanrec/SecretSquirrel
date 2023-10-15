@@ -59,7 +59,7 @@ func GetConfig() MasterConfig {
 		}
 		err := json.Unmarshal(configJson, &masterServerConfig)
 		if err != nil {
-			log.Fatalln("Error unmarshalling config file ", err)
+			log.Fatalln("Error Unmarshal config file ", err)
 		}
 		log.Printf("Config set successfully %v\n", masterServerConfig)
 	})
