@@ -11,19 +11,19 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/arpanrec/secureserver/internal/common"
+	"github.com/arpanrec/secureserver/internal/serverconfig"
 )
 
 var (
-	users map[string]interface{}
-	mo    = &sync.Once{}
+	usersDb map[string]serverconfig.UserConfig
+	mo      = &sync.Once{}
 )
 
-func getUsers() map[string]interface{} {
+func getUsers() map[string]serverconfig.UserConfig {
 	mo.Do(func() {
-		users = common.GetConfig()["users"].(map[string]interface{})
+		usersDb = serverconfig.GetConfig().UserDb
 	})
-	return users
+	return usersDb
 }
 
 func GetUserDetails(authHeader string) (string, error) {
