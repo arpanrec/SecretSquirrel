@@ -1,11 +1,12 @@
 package storage
 
 import (
+	"log"
+	"sync"
+
 	"github.com/arpanrec/secureserver/internal/common"
 	"github.com/arpanrec/secureserver/internal/encryption"
 	"github.com/arpanrec/secureserver/internal/physical"
-	"log"
-	"sync"
 )
 
 var pStorage physical.Storage
@@ -20,7 +21,7 @@ func getStorage() physical.Storage {
 		case "file":
 			pStorage = physical.FileStorage{}
 		default:
-			log.Fatalln("Invalid storage type ", storageType)
+			log.Fatalln("Error Invalid storage type ", storageType)
 		}
 	})
 	return pStorage
