@@ -1,8 +1,8 @@
 {
   "encryption": {
-    "private_key_file": "/home/clouduser/Downloads/INIT_GPG_PRIVATE_KEY",
-    "public_key_file": "/home/clouduser/Downloads/INIT_GPG_PUBLIC_KEY",
-    "private_key_password_file": "/home/clouduser/Downloads/INIT_GPG_PRIVATE_KEY_PASSWORD",
+    "gpg_private_key_file": "/home/clouduser/Downloads/INIT_GPG_PRIVATE_KEY",
+    "gpg_public_key_file": "/home/clouduser/Downloads/INIT_GPG_PUBLIC_KEY",
+    "gpg_private_key_password_file": "/home/clouduser/Downloads/INIT_GPG_PRIVATE_KEY_PASSWORD",
     "delete_key_files_after_startup": false
   },
   "storage": {
@@ -16,7 +16,7 @@
   },
   "pki": {
     "openssl_root_ca_key_file": "/home/clouduser/Downloads/INIT_OPENSSL_ROOT_CA_KEY_FILE",
-    "openssl_root_ca_cert_file": "/home/clouduser/Downloads/INIT_OPENSSL_ROOT_CA_CRT_FILE",
+    "openssl_root_ca_cert_file": "/home/clouduser/Downloads/INIT_OPENSSL_ROOT_CA_CERT_FILE",
     "openssl_root_ca_key_password_file": "/home/clouduser/Downloads/INIT_ROOT_CA_KEY_PASSWORD_FILE",
     "openssl_root_ca_key_NoPassword_file": "/home/clouduser/Downloads/INIT_OPENSSL_ROOT_CA_NO_PASSWORD_KEY_FILE"
   }

@@ -57,9 +57,9 @@ File location can be set via environment variable `SECURE_SERVER_CONFIG_FILE_PAT
 ```json
 {
   "encryption": {
-    "private_key_path": "Path to GPG private key",
+    "gpg_private_key_path": "Path to GPG private key",
     "public_key_path": "Path to GPG public key",
-    "private_key_password_path": "Password file for GPG private key",
+    "gpg_private_key_password_path": "Password file for GPG private key",
     "delete_key_files_after_startup": "Boolean, delete key files after startup"
   },
   "storage": {
