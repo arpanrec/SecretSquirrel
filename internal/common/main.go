@@ -24,11 +24,11 @@ func GetConfig() map[string]interface{} {
 		}
 		configJson, er := os.ReadFile(configFilePath)
 		if er != nil {
-			log.Println("Error reading config file", er)
+			log.Fatalln("Error reading config file", er)
 		}
 		err := json.Unmarshal(configJson, &config)
 		if err != nil {
-			log.Println("Error unmarshalling config file ", err)
+			log.Fatalln("Error unmarshalling config file ", err)
 		}
 		log.Printf("Config set successfully %v\n", config)
 	})
