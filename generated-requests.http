@@ -4,11 +4,12 @@ Authorization: Basic {{username}} {{password}}
 {
   "name": "new namasfasfsae"
 }
-
 ###
 GET {{endpoint}}/v1/files/objects/a.json
 Authorization: Basic {{username}} {{password}}
 ###
-
+GET {{endpoint}}/v1/files/objects/notfound.json
+Authorization: Basic {{username}} {{password}}
+###
 GET {{endpoint}}/v1/tfstate/test1
 Authorization: Basic {{username}} {{password}}

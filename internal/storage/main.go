@@ -35,6 +35,7 @@ func GetData(l string) (string, error) {
 	}
 	e := encryption.DecryptMessage(&d)
 	if e != nil {
+		log.Println("Error while getting data while decrypting message: ", e)
 		return "", e
 	}
 	return d, nil

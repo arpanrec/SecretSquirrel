@@ -1,9 +1,11 @@
 package fileserver
 
 import (
+	"fmt"
 	"github.com/arpanrec/secureserver/internal/common"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/arpanrec/secureserver/internal/storage"
 )
@@ -15,7 +17,13 @@ func ReadWriteFilesFromURL(b string, m string, filePath string, w http.ResponseW
 	case http.MethodGet:
 		d, err := storage.GetData(filePath)
 		if err != nil {
-			common.HttpResponseWriter(w, http.StatusNotFound, "Not Found")
+			log.Println("Error while getting data: ", err)
+			if strings.HasSuffix(err.Error(), "no such file or directory") {
+				common.HttpResponseWriter(w, http.StatusNotFound, "")
+				return
+			}
+			common.HttpResponseWriter(w, http.StatusInternalServerError,
+				fmt.Sprintf("Internal Server Error: %s", err.Error()))
 			return
 		}
 		common.HttpResponseWriter(w, http.StatusOK, d)

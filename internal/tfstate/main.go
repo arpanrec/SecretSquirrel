@@ -21,6 +21,7 @@ func TerraformStateHandler(b string, m string, p string, q map[string][]string,
 	case http.MethodGet:
 		d, err := storage.GetData(stateFilePath)
 		if err != nil {
+			log.Println("Error while getting data: ", err)
 			if strings.HasSuffix(err.Error(), "no such file or directory") {
 				common.HttpResponseWriter(w, http.StatusOK, "")
 				return
