@@ -17,15 +17,24 @@ This can be used as a backend for terraform.
 
 URL format: `<protocol>://<host>:<port>/v1/tfstate/<workspace>`
 
+Terraform [http backend](https://developer.hashicorp.com/terraform/language/settings/backends/http) configuration:
+
 ```hcl
 terraform {
   backend "http" {
     address        = "http://localhost:8080/v1/tfstate/test"
     lock_address   = "http://localhost:8080/v1/tfstate/test"
     unlock_address = "http://localhost:8080/v1/tfstate/test"
-    username       = "arpanrec"
+    username       = "arpanrec" # GitHub username (not email)
   }
 }
+```
+
+Terraform init command:
+
+```bash
+terraform init \
+  -backend-config="password=${GITHUB_PERSONAL_ACCESS_TOKEN}"
 ```
 
 ## File Server
