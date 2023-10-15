@@ -31,17 +31,17 @@ func setGPGInfo() openGPGInfo {
 		gpgPassphraseFilePath := common.GetConfig()["encryption"].(map[string]interface{})["private_key_password_path"].(string)
 		gpgPrivateKey, err := os.ReadFile(gpgPrivateKeyPath)
 		if err != nil {
-			log.Println("Error reading private key: ", err)
+			log.Fatalln("Error reading private key: ", err)
 		}
 
 		gpgPublicKey, err1 := os.ReadFile(gpgPublicKeyPath)
 		if err1 != nil {
-			log.Println("Error reading public key: ", err1)
+			log.Fatalln("Error reading public key: ", err1)
 		}
 
 		gpgPassphrase, err2 := os.ReadFile(gpgPassphraseFilePath)
 		if err2 != nil {
-			log.Println("Error reading passphrase: ", err2)
+			log.Fatalln("Error reading passphrase: ", err2)
 		}
 		gpgPassphraseSanitized := strings.Split(string(gpgPassphrase), "\n")[0]
 		gpgInfo = openGPGInfo{
@@ -55,15 +55,15 @@ func setGPGInfo() openGPGInfo {
 			log.Println("Deleting keys")
 			err3 := os.Remove(gpgPrivateKeyPath)
 			if err3 != nil {
-				log.Println("Error deleting private key: ", err3)
+				log.Fatalln("Error deleting private key: ", err3)
 			}
 			err4 := os.Remove(gpgPublicKeyPath)
 			if err4 != nil {
-				log.Println("Error deleting public key: ", err4)
+				log.Fatalln("Error deleting public key: ", err4)
 			}
 			err5 := os.Remove(gpgPassphraseFilePath)
 			if err5 != nil {
-				log.Println("Error deleting passphrase: ", err5)
+				log.Fatalln("Error deleting passphrase: ", err5)
 			}
 		}
 	})

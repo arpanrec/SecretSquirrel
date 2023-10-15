@@ -1,4 +1,7 @@
-# Utils Server
+# Secure Server
+
+Secure Server is a simple HTTP server with authentication and encryption.
+Data is stored in a gpg encrypted message at rest.
 
 ## User Space
 
@@ -11,11 +14,15 @@ Authentication is done via basic auth header `Authorization: Basic <base64 encod
 - username: GitHub username (not email)
 - password: GitHub personal access token.
 
-## Terraform HTTP Backend
+## Functionality
+
+### Terraform HTTP Backend
 
 This can be used as a backend for terraform.
 
 URL format: `<protocol>://<host>:<port>/v1/tfstate/<workspace>`
+
+Terraform [http backend](https://developer.hashicorp.com/terraform/language/settings/backends/http) configuration:
 
 ```hcl
 terraform {
@@ -23,12 +30,19 @@ terraform {
     address        = "http://localhost:8080/v1/tfstate/test"
     lock_address   = "http://localhost:8080/v1/tfstate/test"
     unlock_address = "http://localhost:8080/v1/tfstate/test"
-    username       = "arpanrec"
+    username       = "arpanrec" # GitHub username (not email)
   }
 }
 ```
 
-## File Server
+Terraform init command:
+
+```bash
+terraform init \
+  -backend-config="password=${GITHUB_PERSONAL_ACCESS_TOKEN}"
+```
+
+### File Server
 
 This can be used as a file server.
 
