@@ -19,7 +19,7 @@ type FileStorageConfig struct {
 
 var fileStorageConfigVar FileStorageConfig
 
-func getPath() FileStorageConfig {
+func getFileStorageConfigVar() FileStorageConfig {
 	oncePhysicalFile.Do(func() {
 		storagePath := serverconfig.GetConfig().Storage.Config["path"].(string)
 		if storagePath == "" {
@@ -34,7 +34,7 @@ func getPath() FileStorageConfig {
 }
 
 func (fs FileStorageConfig) GetData(Location string) (string, error) {
-	p := path.Join(getPath().Path, Location)
+	p := path.Join(getFileStorageConfigVar().Path, Location)
 	d, err := os.ReadFile(p)
 	return string(d), err
 }
@@ -42,7 +42,7 @@ func (fs FileStorageConfig) GetData(Location string) (string, error) {
 func (fs FileStorageConfig) PutData(Location string, Data string) (bool, error) {
 	mutexPhysicalFile.Lock()
 	defer mutexPhysicalFile.Unlock()
-	p := path.Join(getPath().Path, Location)
+	p := path.Join(getFileStorageConfigVar().Path, Location)
 	dir := filepath.Dir(p)
 	errMakeDir := os.MkdirAll(dir, 0755)
 	if errMakeDir != nil {
@@ -60,7 +60,7 @@ func (fs FileStorageConfig) PutData(Location string, Data string) (bool, error) 
 func (fs FileStorageConfig) DeleteData(Location string) error {
 	mutexPhysicalFile.Lock()
 	defer mutexPhysicalFile.Unlock()
-	p := path.Join(getPath().Path, Location)
+	p := path.Join(getFileStorageConfigVar().Path, Location)
 	err := os.Remove(p)
 	return err
 }
