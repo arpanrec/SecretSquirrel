@@ -1,12 +1,12 @@
 package pki
 
-type ConfigJsonPki struct {
-	// The path to the CA certificate file.
-	CaCertFile string `json:"openssl_root_ca_cert_path,omitempty"`
-	// The path to the CA private key file.
-	CaPrivateKeyFile string `json:"openssl_root_ca_key_path,omitempty"`
-	// The path to the CA private key password file.
-	CaPrivateKeyPasswordFile string `json:"openssl_root_ca_key_password_path,omitempty"`
-	// The path to the server certificate file.
-	CaPrivateKeyNopassFile string `json:"openssl_root_ca_key_nopasswd_path,omitempty"`
+type ConfigPki struct {
+	CaCertFile                 string `json:"openssl_root_ca_cert_file,omitempty"`
+	CaPrivateKeyFile           string `json:"openssl_root_ca_key_file,omitempty"`
+	CaPrivateKeyPasswordFile   string `json:"openssl_root_ca_key_password_file,omitempty"`
+	CaPrivateKeyNoPasswordFile string `json:"openssl_root_ca_key_NoPassword_file,omitempty"`
+	CaCert                     string `json:"openssl_root_ca_cert,omitempty"`
+	CaPrivateKey               string `json:"openssl_root_ca_key,omitempty"`
+	CaPrivateKeyPassword       string `json:"openssl_root_ca_key_password,omitempty"`
+	CaPrivateKeyNoPassword     string `json:"openssl_root_ca_key_NoPassword,omitempty"`
 }

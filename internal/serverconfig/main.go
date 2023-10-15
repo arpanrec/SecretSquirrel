@@ -13,9 +13,9 @@ var mo = &sync.Once{}
 var mu = &sync.Mutex{}
 
 type EncryptionConfig struct {
-	GPGPrivateKeyPath       string `json:"private_key_path"`
-	GPGPublicKeyPath        string `json:"public_key_path"`
-	GPGPassphrasePath       string `json:"private_key_password_path"`
+	GPGPrivateKeyFile       string `json:"private_key_file"`
+	GPGPublicKeyFile        string `json:"public_key_file"`
+	GPGPassphraseFile       string `json:"private_key_password_file"`
 	GPGPrivateKey           string `json:"private_key"`
 	GPGPublicKey            string `json:"public_key"`
 	GPGPrivateKeyPassphrase []byte `json:"private_key_password"`
@@ -23,10 +23,10 @@ type EncryptionConfig struct {
 }
 
 type PkiConfig struct {
-	CaCertFile               string `json:"openssl_root_ca_cert_path"`
-	CaPrivateKeyFile         string `json:"openssl_root_ca_key_path"`
-	CaPrivateKeyPasswordFile string `json:"openssl_root_ca_key_password_path"`
-	CaPrivateKeyNopassFile   string `json:"openssl_root_ca_key_nopasswd_path"`
+	CaCertFile               string `json:"openssl_root_ca_cert_file"`
+	CaPrivateKeyFile         string `json:"openssl_root_ca_key_file"`
+	CaPrivateKeyPasswordFile string `json:"openssl_root_ca_key_password_file"`
+	CaPrivateKeyNopassFile   string `json:"openssl_root_ca_key_NoPassword_file"`
 	DeleteKeys               bool   `json:"delete_key_files_after_startup"`
 }
 
