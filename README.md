@@ -23,8 +23,6 @@ This can be used as a file server.
 
 URL format: `<protocol>://<host>:<port>/v1/files/<path>`
 
-```bash
-
 ## Deployment
 
 ### Deployment: Gitlab Runner
