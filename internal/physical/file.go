@@ -1,17 +1,13 @@
 package physical
 
 import (
-	"github.com/arpanrec/secureserver/internal/common"
+	"github.com/arpanrec/secureserver/internal/serverconfig"
 	"log"
 	"os"
 	"path"
 	"path/filepath"
 	"sync"
 )
-
-type FileStorage struct{}
-
-var fileStoragePath string
 
 var mutexPhysicalFile = &sync.Mutex{}
 
@@ -21,24 +17,32 @@ type FileStorageConfig struct {
 	Path string `json:"path"`
 }
 
-func getPath() string {
+var fileStorageConfigVar FileStorageConfig
+
+func getPath() FileStorageConfig {
 	oncePhysicalFile.Do(func() {
-		fileStoragePath = common.GetConfig()["storage"].(map[string]interface{})["config"].(map[string]interface{})["path"].(string)
-		log.Printf("File storage path set to %v", fileStoragePath)
+		storagePath := serverconfig.GetConfig().Storage.Config["path"].(string)
+		if storagePath == "" {
+			log.Fatalln("Fatal Storage path not set")
+		}
+		fileStorageConfigVar = FileStorageConfig{
+			Path: storagePath,
+		}
+		log.Printf("File storage path set to %v", fileStorageConfigVar)
 	})
-	return fileStoragePath
+	return fileStorageConfigVar
 }
 
-func (fs FileStorage) GetData(Location string) (string, error) {
-	p := path.Join(getPath(), Location)
+func (fs FileStorageConfig) GetData(Location string) (string, error) {
+	p := path.Join(getPath().Path, Location)
 	d, err := os.ReadFile(p)
 	return string(d), err
 }
 
-func (fs FileStorage) PutData(Location string, Data string) (bool, error) {
+func (fs FileStorageConfig) PutData(Location string, Data string) (bool, error) {
 	mutexPhysicalFile.Lock()
 	defer mutexPhysicalFile.Unlock()
-	p := path.Join(getPath(), Location)
+	p := path.Join(getPath().Path, Location)
 	dir := filepath.Dir(p)
 	errMakeDir := os.MkdirAll(dir, 0755)
 	if errMakeDir != nil {
@@ -53,10 +57,10 @@ func (fs FileStorage) PutData(Location string, Data string) (bool, error) {
 	return true, nil
 }
 
-func (fs FileStorage) DeleteData(Location string) error {
+func (fs FileStorageConfig) DeleteData(Location string) error {
 	mutexPhysicalFile.Lock()
 	defer mutexPhysicalFile.Unlock()
-	p := path.Join(getPath(), Location)
+	p := path.Join(getPath().Path, Location)
 	err := os.Remove(p)
 	return err
 }

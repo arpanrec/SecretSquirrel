@@ -19,7 +19,7 @@ func getStorage() physical.Storage {
 		log.Print("Storage type set to ", storageType)
 		switch storageType {
 		case "file":
-			pStorage = physical.FileStorage{}
+			pStorage = physical.FileStorageConfig{}
 		default:
 			log.Println("Error Invalid storage type ", storageType)
 		}
