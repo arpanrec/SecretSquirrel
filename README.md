@@ -1,4 +1,7 @@
-# Utils Server
+# Secure Server
+
+Secure Server is a simple HTTP server with authentication and encryption.
+Data is stored in a gpg encrypted message at rest.
 
 ## User Space
 
@@ -11,7 +14,9 @@ Authentication is done via basic auth header `Authorization: Basic <base64 encod
 - username: GitHub username (not email)
 - password: GitHub personal access token.
 
-## Terraform HTTP Backend
+## Functionality
+
+### Terraform HTTP Backend
 
 This can be used as a backend for terraform.
 
@@ -37,7 +42,7 @@ terraform init \
   -backend-config="password=${GITHUB_PERSONAL_ACCESS_TOKEN}"
 ```
 
-## File Server
+### File Server
 
 This can be used as a file server.
 
