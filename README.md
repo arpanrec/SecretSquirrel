@@ -74,12 +74,12 @@ File location can be set via environment variable `SECURE_SERVER_CONFIG_FILE_PAT
 
 ## Deployment
 
-### Deployment: Gitlab Runner
+### Deployment: GitLab Runner
 
-Upload the `.env` file to Gitlab Secure Files. (Gitlab Project -> Settings -> CI/CD -> Secure Files -> Upload `.env` File)
+Upload the `.env` file to GitLab Secure Files. (GitLab Project -> Settings -> CI/CD -> Secure Files -> Upload `.env` File)
 
 <details>
-  <summary>Gitlab Runner Installation</summary>
+  <summary>GitLab Runner Installation</summary>
 
 Deployment is done via [gitlab-runner](https://docs.gitlab.com/runner/install/linux-repository.html).
 Add the Server as gitlab-runner with shell executor, also make sure gitlab runner has root access.
@@ -181,9 +181,9 @@ sudo userdel -r actions-runner
 
 Download a copy of secure working directory from secure server and upload it to offshore storage.
 
-### Backup: Gitlab Runner
+### Backup: GitLab Runner
 
-Upload the `.env` file to Gitlab Secure Files. (Gitlab Project -> Settings -> CI/CD -> Secure Files -> Upload `.env` File)
+Upload the `.env` file to GitLab Secure Files. (GitLab Project -> Settings -> CI/CD -> Secure Files -> Upload `.env` File)
 
 - For runner installation, [check this](#deployment-gitlab-runner).
 
