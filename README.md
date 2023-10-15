@@ -161,7 +161,7 @@ Upload the base64 encoded `.env` file to GitHub Secrets as `ENVIRONMENT_FILE`. (
 <details>
   <summary>Github Actions Self Hosted Runner</summary>
 
-Deployment is done via [GitHub Actions Self Hosted Runner](https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners). 
+Deployment is done via [GitHub Actions Self Hosted Runner](https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners).
 Make sure GitHub Actions Self Hosted Runner has NOPASSWD root access.
 
 - Install GitHub Actions Self Hosted Runner
