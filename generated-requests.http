@@ -1,15 +1,15 @@
-PUT {{endpoint}}/v1/files/objects/a.json
+PUT {{endpoint}}/api/v1/files/objects/a.json
 Authorization: Basic {{username}} {{password}}
 
 {
   "name": "new namasfasfsae"
 }
 ###
-GET {{endpoint}}/v1/files/objects/a.json
+GET {{endpoint}}/api/v1/files/objects/a.json
 Authorization: Basic {{username}} {{password}}
 ###
-GET {{endpoint}}/v1/files/objects/notfound.json
+GET {{endpoint}}/api/v1/files/objects/notfound.json
 Authorization: Basic {{username}} {{password}}
 ###
-GET {{endpoint}}/v1/tfstate/test1
+GET {{endpoint}}/api/v1/tfstate/test1
 Authorization: Basic {{username}} {{password}}
