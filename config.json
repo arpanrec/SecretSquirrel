@@ -17,7 +17,7 @@
   "pki": {
     "openssl_root_ca_key_file": "/home/clouduser/Downloads/INIT_OPENSSL_ROOT_CA_KEY",
     "openssl_root_ca_cert_file": "/home/clouduser/Downloads/INIT_OPENSSL_ROOT_CA_CERT",
-    "openssl_root_ca_key_password_file": "/home/clouduser/Downloads/INIT_ROOT_CA_KEY_PASSWORD",
+    "openssl_root_ca_key_password_file": "/home/clouduser/Downloads/INIT_OPENSSL_ROOT_CA_KEY_PASSWORD",
     "openssl_root_ca_key_NoPassword_file": "/home/clouduser/Downloads/INIT_OPENSSL_ROOT_CA_NO_PASSWORD_KEY"
   }
 }
