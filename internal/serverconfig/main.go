@@ -1,6 +1,8 @@
 package serverconfig
 
 import (
+	"crypto/rsa"
+	"crypto/x509"
 	"encoding/json"
 	"log"
 	"os"
@@ -28,6 +30,8 @@ type PkiConfig struct {
 	CaPrivateKeyPasswordFile   string `json:"openssl_root_ca_key_password_file"`
 	CaPrivateKeyNoPasswordFile string `json:"openssl_root_ca_no_password_key_file"`
 	CaDeleteKeys               bool   `json:"openssl_delete_key_files_after_startup"`
+	CaCert                     *x509.Certificate
+	CaPrivateNoPasswordKey     *rsa.PrivateKey
 }
 
 type StorageConfig struct {

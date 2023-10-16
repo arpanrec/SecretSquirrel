@@ -2,7 +2,6 @@ package fileserver
 
 import (
 	"fmt"
-	"github.com/arpanrec/secureserver/internal/common"
 	"log"
 	"net/http"
 	"strings"
@@ -10,7 +9,7 @@ import (
 	"github.com/arpanrec/secureserver/internal/storage"
 )
 
-func ReadWriteFilesFromURL(b string, m string, filePath string, w http.ResponseWriter) {
+func ReadWriteFilesFromURL(b string, m string, filePath string) (int, string) {
 
 	switch m {
 
@@ -19,32 +18,26 @@ func ReadWriteFilesFromURL(b string, m string, filePath string, w http.ResponseW
 		if err != nil {
 			log.Println("Error while getting data: ", err)
 			if strings.HasSuffix(err.Error(), "no such file or directory") {
-				common.HttpResponseWriter(w, http.StatusNotFound, "")
-				return
+				return http.StatusNotFound, ""
 			}
-			common.HttpResponseWriter(w, http.StatusInternalServerError,
-				fmt.Sprintf("Internal Server Error: %s", err.Error()))
-			return
+			return http.StatusInternalServerError,
+				fmt.Sprintf("Internal Server Error: %s", err.Error())
 		}
-		common.HttpResponseWriter(w, http.StatusOK, d)
-		return
+		return http.StatusOK, d
 	case http.MethodPut, http.MethodPost:
 		log.Println("Body: ", b)
 		_, err := storage.PutData(filePath, b)
 		if err != nil {
-			common.HttpResponseWriter(w, http.StatusInternalServerError, "Internal Server Error")
-			return
+			return http.StatusInternalServerError, "Internal Server Error"
 		}
-		common.HttpResponseWriter(w, http.StatusCreated, "OK")
-		return
+		return http.StatusCreated, "OK"
 	case http.MethodDelete:
 		err := storage.DeleteData(filePath)
 		if err != nil {
-			common.HttpResponseWriter(w, http.StatusInternalServerError, "Internal Server Error")
-			return
+			return http.StatusInternalServerError, "Internal Server Error"
 		}
 	default:
-		common.HttpResponseWriter(w, http.StatusMethodNotAllowed, "Unsupported Method")
-
+		return http.StatusMethodNotAllowed, "Unsupported Method"
 	}
+	return http.StatusMethodNotAllowed, "Unsupported Method"
 }
