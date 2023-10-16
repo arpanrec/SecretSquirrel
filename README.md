@@ -20,16 +20,16 @@ Authentication is done via basic auth header `Authorization: Basic <base64 encod
 
 This can be used as a backend for terraform.
 
-URL format: `<protocol>://<host>:<port>/v1/tfstate/<workspace>`
+URL format: `<protocol>://<host>:<port>/api/v1/tfstate/<workspace>`
 
 Terraform [http backend](https://developer.hashicorp.com/terraform/language/settings/backends/http) configuration:
 
 ```hcl
 terraform {
   backend "http" {
-    address        = "http://localhost:8080/v1/tfstate/test"
-    lock_address   = "http://localhost:8080/v1/tfstate/test"
-    unlock_address = "http://localhost:8080/v1/tfstate/test"
+    address        = "http://localhost:8080/api/v1/tfstate/test"
+    lock_address   = "http://localhost:8080/api/v1/tfstate/test"
+    unlock_address = "http://localhost:8080/api/v1/tfstate/test"
     username       = "arpanrec" # GitHub username (not email)
   }
 }
@@ -46,7 +46,7 @@ terraform init \
 
 This can be used as a file server.
 
-URL format: `<protocol>://<host>:<port>/v1/files/<path>`
+URL format: `<protocol>://<host>:<port>/api/v1/files/<path>`
 
 ## Configuration
 
