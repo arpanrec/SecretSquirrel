@@ -5,16 +5,15 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
-	"crypto/x509/pkix"
 	"encoding/pem"
-	"github.com/arpanrec/secureserver/internal/serverconfig"
 	"log"
 	"math/big"
-	"net"
 	"os"
 	"os/exec"
 	"sync"
 	"time"
+
+	"github.com/arpanrec/secureserver/internal/serverconfig"
 )
 
 var (
@@ -63,19 +62,19 @@ func getPkiConfig() serverconfig.PkiConfig {
 			log.Println("Deleting CA key files")
 			errRemoveKey := os.Remove(pkiConfigVar.CaPrivateKeyFile)
 			if errRemoveKey != nil {
-				log.Println("Error deleting CA key file: ", errRemoveKey)
+				log.Fatalln("Error deleting CA key file: ", errRemoveKey)
 			}
 			errRemoveKey = os.Remove(pkiConfigVar.CaPrivateKeyNoPasswordFile)
 			if errRemoveKey != nil {
-				log.Println("Error deleting CA key file: ", errRemoveKey)
+				log.Fatalln("Error deleting CA key file: ", errRemoveKey)
 			}
 			errRemoveKey = os.Remove(pkiConfigVar.CaPrivateKeyPasswordFile)
 			if errRemoveKey != nil {
-				log.Println("Error deleting CA key file: ", errRemoveKey)
+				log.Fatalln("Error deleting CA key file: ", errRemoveKey)
 			}
 			errRemoveKey = os.Remove(pkiConfigVar.CaCertFile)
 			if errRemoveKey != nil {
-				log.Println("Error deleting CA key file: ", errRemoveKey)
+				log.Fatalln("Error deleting CA key file: ", errRemoveKey)
 			}
 		}
 	})
@@ -83,24 +82,15 @@ func getPkiConfig() serverconfig.PkiConfig {
 	return pkiConfigVar
 }
 
-func GetCert(dnsAltNames []string) (string, string, error) {
+func GetCert(dnsAltNames []string, extKeyUsage []x509.ExtKeyUsage) (string, string, error) {
 
 	pkiCurrentConfig := getPkiConfig()
 	cert := &x509.Certificate{
-		SerialNumber: big.NewInt(1658),
-		Subject: pkix.Name{
-			Organization:  []string{"Company, INC."},
-			Country:       []string{"US"},
-			Province:      []string{""},
-			Locality:      []string{"San Francisco"},
-			StreetAddress: []string{"Golden Gate Bridge"},
-			PostalCode:    []string{"94016"},
-		},
-		IPAddresses:    []net.IP{net.IPv4(127, 0, 0, 1), net.IPv6loopback},
+		SerialNumber:   big.NewInt(1658),
 		NotBefore:      time.Now(),
 		NotAfter:       time.Now().AddDate(10, 0, 0),
 		SubjectKeyId:   []byte{1, 2, 3, 4, 6},
-		ExtKeyUsage:    []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth, x509.ExtKeyUsageServerAuth},
+		ExtKeyUsage:    extKeyUsage,
 		KeyUsage:       x509.KeyUsageDigitalSignature,
 		DNSNames:       dnsAltNames,
 		IsCA:           false,
