@@ -188,6 +188,10 @@ Deployment is locked with branch name `main`, and when this is not a scheduled j
 
 Upload the base64 encoded `.env` file to GitHub Secrets as `ENVIRONMENT_FILE`. (GitHub Project -> Settings -> Secrets -> New repository secret)
 
+```bash
+base64 .env --wrap=0
+```
+
 <details>
   <summary>Github Actions Self Hosted Runner</summary>
 
@@ -201,10 +205,10 @@ sudo useradd -m -s /bin/bash actions-runner
 echo "actions-runner ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/010-actions-runner >/dev/null
 sudo su - actions-runner
 cd ~
-curl -o actions-runner-linux-x64-2.309.0.tar.gz \
-  -L https://github.com/actions/runner/releases/download/v2.309.0/actions-runner-linux-x64-2.309.0.tar.gz
-echo "2974243bab2a282349ac833475d241d5273605d3628f0685bd07fb5530f9bb1a  actions-runner-linux-x64-2.309.0.tar.gz" | shasum -a 256 -c
-tar xzf ./actions-runner-linux-x64-2.309.0.tar.gz
+curl -o actions-runner-linux-x64-2.310.2.tar.gz \
+  -L https://github.com/actions/runner/releases/download/v2.310.2/actions-runner-linux-x64-2.310.2.tar.gz
+echo "fb28a1c3715e0a6c5051af0e6eeff9c255009e2eec6fb08bc2708277fbb49f93  actions-runner-linux-x64-2.310.2.tar.gz" | shasum -a 256 -c
+tar xzf ./actions-runner-linux-x64-2.310.2.tar.gz
 ./config.sh --url https://github.com/arpanrec/secureserver --token "${TOKEN}" --name secureserver --work _work --labels secureserver --unattended
 sudo ./svc.sh install
 sudo ./svc.sh start
