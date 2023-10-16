@@ -39,7 +39,7 @@ func setGPGInfo() serverconfig.EncryptionConfig {
 		log.Printf("Passphrase: %s", gpgPassphraseSanitized)
 		encryptionConfig.GPGPrivateKeyPassphrase = []byte(gpgPassphraseSanitized)
 
-		if encryptionConfig.DeleteKeys {
+		if encryptionConfig.GPGDeleteKeys {
 			log.Println("Deleting keys")
 			err3 := os.Remove(encryptionConfig.GPGPrivateKeyFile)
 			if err3 != nil {
