@@ -73,3 +73,4 @@ create_environment_file_and_new_root_ca_certs.sh
 INIT_GPG_KEY_PASSWD
 INIT_OPENSSL_ROOT_CA_PASSWORD
 INIT_OPENSSL_ROOT_CA_NO_PASSWORD_KEY
+create_environment.sh
