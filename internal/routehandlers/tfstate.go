@@ -4,10 +4,12 @@ import (
 	"github.com/arpanrec/secureserver/internal/tfstate"
 	"github.com/gin-gonic/gin"
 	"io"
+	"log"
 )
 
 func TfStateHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		log.Println("Inside TfStateHandler")
 		body, errReadAll := io.ReadAll(c.Request.Body)
 		if errReadAll != nil {
 			c.JSON(500, gin.H{

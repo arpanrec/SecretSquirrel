@@ -1,10 +1,12 @@
 package cmd
 
 import (
+	"log"
+	"net/http"
+
 	"github.com/arpanrec/secureserver/internal/middleware"
 	"github.com/arpanrec/secureserver/internal/routehandlers"
 	"github.com/gin-gonic/gin"
-	"log"
 )
 
 func Runner() {
@@ -17,7 +19,9 @@ func Runner() {
 	log.Println("Starting server on port 8080")
 	apiRouterV1 := apiRouter.Group("/v1")
 	apiRouterV1.Use(middleware.AuthMiddleWare(), middleware.NameSpaceMiddleWare())
-	apiRouterV1.Any("/tfstate/*any", routehandlers.TfStateHandler())
-	apiRouterV1.Any("/files/*any", routehandlers.FileServerHandler())
+	apiRouterV1.Match([]string{http.MethodGet, http.MethodPost, http.MethodPut, "LOCK", "UNLOCK"},
+		"/tfstate/*any", routehandlers.TfStateHandler())
+	apiRouterV1.Match([]string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
+		"/files/*any", routehandlers.FileServerHandler())
 	log.Fatal(r.Run(":8080"))
 }

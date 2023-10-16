@@ -39,6 +39,7 @@ func TerraformStateHandler(b string, m string, p string, q map[string][]string) 
 					return http.StatusInternalServerError,
 						fmt.Sprintf("Internal Server Error: %s", lockDataWriteErr.Error())
 				}
+				return http.StatusOK, ""
 			}
 		}
 
