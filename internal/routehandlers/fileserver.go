@@ -1,7 +1,6 @@
 package routehandlers
 
 import (
-	"fmt"
 	"github.com/arpanrec/secureserver/internal/fileserver"
 	"github.com/gin-gonic/gin"
 	"io"
@@ -18,7 +17,6 @@ func FileServerHandler() gin.HandlerFunc {
 		}
 		rMethod := c.Request.Method
 		locationPath := c.GetString("locationPath")
-		fmt.Print(locationPath)
 		s, d := fileserver.ReadWriteFilesFromURL(string(body), rMethod, locationPath)
 		c.Data(s, "text/plain", []byte(d))
 	}

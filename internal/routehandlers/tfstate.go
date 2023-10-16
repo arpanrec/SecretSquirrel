@@ -19,6 +19,6 @@ func TfStateHandler() gin.HandlerFunc {
 		locationPath := c.GetString("locationPath")
 		query := c.Request.URL.Query()
 		s, d := tfstate.TerraformStateHandler(string(body), rMethod, locationPath, query)
-		c.JSON(s, d)
+		c.Data(s, "application/json", []byte(d))
 	}
 }
