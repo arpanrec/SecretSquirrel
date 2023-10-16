@@ -8,15 +8,15 @@ import (
 )
 
 func DeleteFileSureOrStop(l string) {
+	log.Println("Deleting file: ", l)
 	_, err := os.Stat(l)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return
-		} else {
-			err := os.Remove(l)
-			if err != nil {
-				log.Println("Error deleting file: ", err)
-			}
+	if os.IsNotExist(err) {
+		log.Println("File does not exist: ", l)
+	} else {
+		log.Println("Deleting file: ", l)
+		err := os.Remove(l)
+		if err != nil {
+			log.Fatalln("Error deleting file: ", err)
 		}
 	}
 }
