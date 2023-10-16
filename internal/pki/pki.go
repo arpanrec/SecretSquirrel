@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/rand"
 	"crypto/rsa"
+	"crypto/sha1"
 	"crypto/x509"
 	"encoding/pem"
 	"log"
@@ -108,11 +109,14 @@ func cetCert(dnsAltNames []string, extKeyUsage []x509.ExtKeyUsage, isCA bool) (s
 		log.Println("Error generating cert serial number: ", err)
 		return "", "", err
 	}
+
+	subjectKeyID := sha1.Sum(certPrivKey.PublicKey.N.Bytes())
+
 	cert := &x509.Certificate{
-		SerialNumber:   certSerialNumber, // TODO: Convert to upper case hex
+		SerialNumber:   certSerialNumber,
 		NotBefore:      time.Now(),
 		NotAfter:       time.Now().AddDate(0, 0, 30),
-		SubjectKeyId:   []byte{1, 2, 3, 4, 6}, // TODO: Create proper subject key id from public key
+		SubjectKeyId:   subjectKeyID[:],
 		ExtKeyUsage:    extKeyUsage,
 		KeyUsage:       x509.KeyUsageDigitalSignature,
 		DNSNames:       dnsAltNames,

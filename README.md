@@ -48,6 +48,29 @@ This can be used as a file server.
 
 URL format: `<protocol>://<host>:<port>/api/v1/files/<path>`
 
+### PKI
+
+This can be used as a PKI server.
+
+URL format: `<protocol>://<host>:<port>/api/v1/pki/<clientcert/servercert>`
+Http method: `PUT`
+request body:
+
+```json
+{
+  "dns_names": ["example.com"],
+}
+```
+
+Response body:
+
+```json
+{
+  "cert": "---BEGIN CERTIFICATE---\n...\n---END CERTIFICATE---",
+  "key": "-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----"
+}
+```
+
 ## Configuration
 
 Configuration is done via config json file.
@@ -67,8 +90,15 @@ File location can be set via environment variable `SECURE_SERVER_CONFIG_FILE_PAT
     "config": "Storage config"
   },
   "users": {
-    "githubusername1": {},
-    "githubusername2": {}
+    "githubusername1": null,
+    "githubusername2": null
+  },
+  "pki": {
+    "openssl_root_ca_key_file": "Path to OpenSSL root CA key file",
+    "openssl_root_ca_cert_file": "Path to OpenSSL root CA cert file",
+    "openssl_root_ca_key_password_file": "Path to OpenSSL root CA key password file",
+    "openssl_root_ca_no_password_key_file": "Once the server is up it will create a password less key file, this is the path to that file, reason for this is the limitation of golang crypto package",
+    "openssl_delete_key_files_after_startup": "Boolean, delete key files after startup"
   }
 }
 ```
