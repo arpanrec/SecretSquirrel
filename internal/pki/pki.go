@@ -82,24 +82,42 @@ func getPkiConfig() serverconfig.PkiConfig {
 	return pkiConfigVar
 }
 
-func GetCert(dnsAltNames []string, extKeyUsage []x509.ExtKeyUsage) (string, string, error) {
-
-	pkiCurrentConfig := getPkiConfig()
-	cert := &x509.Certificate{
-		SerialNumber:   big.NewInt(1658),
-		NotBefore:      time.Now(),
-		NotAfter:       time.Now().AddDate(10, 0, 0),
-		SubjectKeyId:   []byte{1, 2, 3, 4, 6},
-		ExtKeyUsage:    extKeyUsage,
-		KeyUsage:       x509.KeyUsageDigitalSignature,
-		DNSNames:       dnsAltNames,
-		IsCA:           false,
-		AuthorityKeyId: pkiCurrentConfig.CaCert.SubjectKeyId,
+func generateSerialNumber() (*big.Int, error) {
+	// Generate a random 128-bit number
+	serialNumber, err := rand.Int(rand.Reader, new(big.Int).Lsh(big.NewInt(1), 128))
+	if err != nil {
+		return nil, err
 	}
+
+	// Convert the number to a byte array and set it as the serial number
+	serialNumberBytes := serialNumber.Bytes()
+	certSerialNumber := &big.Int{}
+	certSerialNumber.SetBytes(serialNumberBytes)
+	return certSerialNumber, nil
+}
+
+func cetCert(dnsAltNames []string, extKeyUsage []x509.ExtKeyUsage, isCA bool) (string, string, error) {
+	pkiCurrentConfig := getPkiConfig()
 	certPrivKey, err := rsa.GenerateKey(rand.Reader, 4096)
 	if err != nil {
 		log.Println("Error generating cert private key: ", err)
 		return "", "", err
+	}
+	certSerialNumber, err := generateSerialNumber()
+	if err != nil {
+		log.Println("Error generating cert serial number: ", err)
+		return "", "", err
+	}
+	cert := &x509.Certificate{
+		SerialNumber:   certSerialNumber, // TODO: Convert to upper case hex
+		NotBefore:      time.Now(),
+		NotAfter:       time.Now().AddDate(0, 0, 30),
+		SubjectKeyId:   []byte{1, 2, 3, 4, 6}, // TODO: Create proper subject key id from public key
+		ExtKeyUsage:    extKeyUsage,
+		KeyUsage:       x509.KeyUsageDigitalSignature,
+		DNSNames:       dnsAltNames,
+		IsCA:           isCA,
+		AuthorityKeyId: pkiCurrentConfig.CaCert.SubjectKeyId,
 	}
 
 	certBytes, err := x509.CreateCertificate(rand.Reader,
@@ -130,5 +148,14 @@ func GetCert(dnsAltNames []string, extKeyUsage []x509.ExtKeyUsage) (string, stri
 		return "", "", errPemEncodePriv
 	}
 	return certPEM.String(), certPrivKeyPEM.String(), nil
+}
 
+func GetServerCert(dnsNames []string) (string, string, error) {
+	return cetCert(dnsNames,
+		[]x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
+		false)
+}
+
+func GetClientCert(dnsNames []string) (string, string, error) {
+	return cetCert(dnsNames, []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth}, false)
 }

@@ -13,3 +13,14 @@ Authorization: Basic {{username}} {{password}}
 ###
 GET {{endpoint}}/api/v1/tfstate/test1
 Authorization: Basic {{username}} {{password}}
+
+###
+PUT {{endpoint}}/api/v1/pki/servercert
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
+
+{
+  "dns_names": [
+    "test1.com"
+  ]
+}
