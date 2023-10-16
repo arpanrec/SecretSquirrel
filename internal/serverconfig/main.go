@@ -26,7 +26,7 @@ type PkiConfig struct {
 	CaCertFile                 string `json:"openssl_root_ca_cert_file"`
 	CaPrivateKeyFile           string `json:"openssl_root_ca_key_file"`
 	CaPrivateKeyPasswordFile   string `json:"openssl_root_ca_key_password_file"`
-	CaPrivateKeyNoPasswordFile string `json:"openssl_root_ca_key_NoPassword_file"`
+	CaPrivateKeyNoPasswordFile string `json:"openssl_root_ca_no_password_key_file"`
 	DeleteKeys                 bool   `json:"delete_key_files_after_startup"`
 }
 
