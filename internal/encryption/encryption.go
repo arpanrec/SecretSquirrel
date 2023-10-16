@@ -1,11 +1,13 @@
 package encryption
 
 import (
-	"github.com/arpanrec/secureserver/internal/serverconfig"
 	"log"
 	"os"
 	"strings"
 	"sync"
+
+	"github.com/arpanrec/secureserver/internal/common"
+	"github.com/arpanrec/secureserver/internal/serverconfig"
 
 	"github.com/ProtonMail/gopenpgp/v2/helper"
 )
@@ -41,18 +43,9 @@ func setGPGInfo() serverconfig.EncryptionConfig {
 
 		if encryptionConfig.GPGDeleteKeys {
 			log.Println("Deleting keys")
-			err3 := os.Remove(encryptionConfig.GPGPrivateKeyFile)
-			if err3 != nil {
-				log.Fatalln("Error deleting private key: ", err3)
-			}
-			err4 := os.Remove(encryptionConfig.GPGPublicKeyFile)
-			if err4 != nil {
-				log.Fatalln("Error deleting public key: ", err4)
-			}
-			err5 := os.Remove(encryptionConfig.GPGPassphraseFile)
-			if err5 != nil {
-				log.Fatalln("Error deleting passphrase: ", err5)
-			}
+			common.DeleteFileSureOrStop(encryptionConfig.GPGPrivateKeyFile)
+			common.DeleteFileSureOrStop(encryptionConfig.GPGPublicKeyFile)
+			common.DeleteFileSureOrStop(encryptionConfig.GPGPassphraseFile)
 		}
 	})
 

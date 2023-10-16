@@ -14,6 +14,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/arpanrec/secureserver/internal/common"
 	"github.com/arpanrec/secureserver/internal/serverconfig"
 )
 
@@ -61,22 +62,10 @@ func getPkiConfig() serverconfig.PkiConfig {
 
 		if pkiConfigVar.CaDeleteKeys {
 			log.Println("Deleting CA key files")
-			errRemoveKey := os.Remove(pkiConfigVar.CaPrivateKeyFile)
-			if errRemoveKey != nil {
-				log.Fatalln("Error deleting CA key file: ", errRemoveKey)
-			}
-			errRemoveKey = os.Remove(pkiConfigVar.CaPrivateKeyNoPasswordFile)
-			if errRemoveKey != nil {
-				log.Fatalln("Error deleting CA key file: ", errRemoveKey)
-			}
-			errRemoveKey = os.Remove(pkiConfigVar.CaPrivateKeyPasswordFile)
-			if errRemoveKey != nil {
-				log.Fatalln("Error deleting CA key file: ", errRemoveKey)
-			}
-			errRemoveKey = os.Remove(pkiConfigVar.CaCertFile)
-			if errRemoveKey != nil {
-				log.Fatalln("Error deleting CA key file: ", errRemoveKey)
-			}
+			common.DeleteFileSureOrStop(pkiConfigVar.CaPrivateKeyFile)
+			common.DeleteFileSureOrStop(pkiConfigVar.CaPrivateKeyNoPasswordFile)
+			common.DeleteFileSureOrStop(pkiConfigVar.CaPrivateKeyPasswordFile)
+			common.DeleteFileSureOrStop(pkiConfigVar.CaCertFile)
 		}
 	})
 	mu.Unlock()
