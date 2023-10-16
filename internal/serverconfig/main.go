@@ -19,15 +19,15 @@ type EncryptionConfig struct {
 	GPGPrivateKey           string `json:"gpg_private_key"`
 	GPGPublicKey            string `json:"gpg_public_key"`
 	GPGPrivateKeyPassphrase []byte `json:"gpg_private_key_password"`
-	DeleteKeys              bool   `json:"delete_key_files_after_startup"`
+	GPGDeleteKeys           bool   `json:"pgp_delete_key_files_after_startup"`
 }
 
 type PkiConfig struct {
 	CaCertFile                 string `json:"openssl_root_ca_cert_file"`
 	CaPrivateKeyFile           string `json:"openssl_root_ca_key_file"`
 	CaPrivateKeyPasswordFile   string `json:"openssl_root_ca_key_password_file"`
-	CaPrivateKeyNoPasswordFile string `json:"openssl_root_ca_key_NoPassword_file"`
-	DeleteKeys                 bool   `json:"delete_key_files_after_startup"`
+	CaPrivateKeyNoPasswordFile string `json:"openssl_root_ca_no_password_key_file"`
+	CaDeleteKeys               bool   `json:"openssl_delete_key_files_after_startup"`
 }
 
 type StorageConfig struct {
