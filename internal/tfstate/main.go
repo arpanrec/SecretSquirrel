@@ -2,7 +2,6 @@ package tfstate
 
 import (
 	"fmt"
-	"github.com/arpanrec/secureserver/internal/common"
 	"log"
 	"net/http"
 	"strings"
@@ -10,8 +9,7 @@ import (
 	"github.com/arpanrec/secureserver/internal/storage"
 )
 
-func TerraformStateHandler(b string, m string, p string, q map[string][]string,
-	w http.ResponseWriter) {
+func TerraformStateHandler(b string, m string, p string, q map[string][]string) (int, string) {
 
 	stateFilePath := p
 	lockFilePath := fmt.Sprintf("%s.lock", p)
@@ -23,68 +21,57 @@ func TerraformStateHandler(b string, m string, p string, q map[string][]string,
 		if err != nil {
 			log.Println("Error while getting data: ", err)
 			if strings.HasSuffix(err.Error(), "no such file or directory") {
-				common.HttpResponseWriter(w, http.StatusOK, "")
-				return
+				return http.StatusOK, ""
 			}
-			common.HttpResponseWriter(w, http.StatusInternalServerError,
-				fmt.Sprintf("Internal Server Error: %s", err.Error()))
-			return
+			return http.StatusInternalServerError,
+				fmt.Sprintf("Internal Server Error: %s", err.Error())
 		}
-		common.HttpResponseWriter(w, http.StatusOK, d)
-		return
+		return http.StatusOK, d
 	case "LOCK":
 		existingLockData, existingLockDataErr := storage.GetData(lockFilePath)
 		if existingLockDataErr != nil {
 			if !strings.HasSuffix(existingLockDataErr.Error(), "no such file or directory") {
-				common.HttpResponseWriter(w, http.StatusInternalServerError,
-					fmt.Sprintf("Internal Server Error: %s", existingLockDataErr.Error()))
-				return
+				return http.StatusInternalServerError,
+					fmt.Sprintf("Internal Server Error: %s", existingLockDataErr.Error())
 			} else {
 				_, lockDataWriteErr := storage.PutData(lockFilePath, b)
 				if lockDataWriteErr != nil {
-					common.HttpResponseWriter(w, http.StatusInternalServerError,
-						fmt.Sprintf("Internal Server Error: %s", lockDataWriteErr.Error()))
-					return
+					return http.StatusInternalServerError,
+						fmt.Sprintf("Internal Server Error: %s", lockDataWriteErr.Error())
 				}
 			}
 		}
 
 		if existingLockData != "" {
 			log.Printf("Lock already exists: %s", existingLockData)
-			common.HttpResponseWriter(w, http.StatusLocked, existingLockData)
-			return
+			return http.StatusLocked, existingLockData
 		}
 	case "UNLOCK":
 		err := storage.DeleteData(lockFilePath)
 		if err != nil {
-			common.HttpResponseWriter(w, http.StatusInternalServerError,
-				fmt.Sprintf("Internal Server Error: %s", err.Error()))
-			return
+			return http.StatusInternalServerError,
+				fmt.Sprintf("Internal Server Error: %s", err.Error())
 		}
-		common.HttpResponseWriter(w, http.StatusOK, "")
-		return
+		return http.StatusOK, ""
 	case http.MethodPut, http.MethodPost:
 		if q["force"] != nil {
 			if q["force"][0] == "true" {
 				_, err := storage.PutData(stateFilePath, b)
 				if err != nil {
-					common.HttpResponseWriter(w, http.StatusInternalServerError,
-						fmt.Sprintf("Internal Server Error: %s", err.Error()))
-					return
+					return http.StatusInternalServerError,
+						fmt.Sprintf("Internal Server Error: %s", err.Error())
 				}
-				common.HttpResponseWriter(w, http.StatusOK, b)
-				return
+				return http.StatusOK, b
 			}
 		}
 		_, err := storage.PutData(stateFilePath, b)
 		if err != nil {
-			common.HttpResponseWriter(w, http.StatusInternalServerError,
-				fmt.Sprintf("Internal Server Error: %s", err.Error()))
-			return
+			return http.StatusInternalServerError,
+				fmt.Sprintf("Internal Server Error: %s", err.Error())
 		}
-		common.HttpResponseWriter(w, http.StatusOK, b)
-		return
+		return http.StatusOK, b
 	default:
-		common.HttpResponseWriter(w, http.StatusMethodNotAllowed, "Method Not Allowed")
+		return http.StatusMethodNotAllowed, "Method Not Allowed"
 	}
+	return http.StatusMethodNotAllowed, "Method Not Allowed"
 }

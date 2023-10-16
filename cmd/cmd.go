@@ -34,7 +34,7 @@ func entryPoint(w http.ResponseWriter, r *http.Request) {
 
 	header := r.Header
 
-	formData := r.Form
+	//formData := r.Form
 
 	authHeader := header.Get("Authorization")
 	username, err := auth.GetUserDetails(authHeader)
@@ -43,16 +43,18 @@ func entryPoint(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println("URL Path: ", urlPath, "\nMethod: ", rMethod, "\nHeader: ", header,
-		"\nForm Data: ", formData,
-		"\nBody: ", string(body), "\nQuery: ", query)
+	//log.Println("URL Path: ", urlPath, "\nMethod: ", rMethod, "\nHeader: ", header,
+	//	"\nForm Data: ", formData,
+	//	"\nBody: ", string(body), "\nQuery: ", query)
 
 	locationPath := fmt.Sprintf("%v/%v", username, urlPath[3:])
 
 	if strings.HasPrefix(urlPath, "/v1/tfstate/") {
-		tfstate.TerraformStateHandler(string(body), rMethod, locationPath, query, w)
+		s, d := tfstate.TerraformStateHandler(string(body), rMethod, locationPath, query)
+		common.HttpResponseWriter(w, s, d)
 	} else if strings.HasPrefix(urlPath, "/v1/files/") {
-		fileserver.ReadWriteFilesFromURL(string(body), rMethod, locationPath, w)
+		s, d := fileserver.ReadWriteFilesFromURL(string(body), rMethod, locationPath)
+		common.HttpResponseWriter(w, s, d)
 	} else {
 		common.HttpResponseWriter(w, http.StatusNotFound, "Not Found")
 	}
