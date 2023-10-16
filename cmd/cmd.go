@@ -23,5 +23,6 @@ func Runner() {
 		"/tfstate/*any", routehandlers.TfStateHandler())
 	apiRouterV1.Match([]string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
 		"/files/*any", routehandlers.FileServerHandler())
+	apiRouterV1.PUT("/pki/*any", routehandlers.PkiHandler())
 	log.Fatal(r.Run(":8080"))
 }
