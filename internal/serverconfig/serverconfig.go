@@ -70,6 +70,7 @@ func GetConfig() MasterConfig {
 		if er != nil {
 			log.Fatalln("Error reading config file", er)
 		}
+		log.Println("Config file read successfully : \n", string(configJson))
 		err := json.Unmarshal(configJson, &masterServerConfig)
 		if err != nil {
 			log.Fatalln("Error Unmarshal config file ", err)
