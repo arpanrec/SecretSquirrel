@@ -40,7 +40,7 @@ sudo cp ./config-prod.json "${SECURE_SERVER_DIR}/config.json"
 sudo userdel -r "${SECURE_SERVER_USER}" || true
 sudo groupdel "${SECURE_SERVER_GROUP}" || true
 sudo groupadd --system "${SECURE_SERVER_GROUP}"
-sudo useradd -s /bin/false --home-dir "/home/${SECURE_SERVER_USER}" --no-create-home "${SECURE_SERVER_USER}" \
+sudo useradd -s /bin/false --home-dir "/home/${SECURE_SERVER_USER}" --no-create-home \
     --system --gid "${SECURE_SERVER_GROUP}" "${SECURE_SERVER_USER}" || true
 sudo chown -R "${SECURE_SERVER_USER}":"${SECURE_SERVER_GROUP}" "${SECURE_SERVER_DIR}"
 
