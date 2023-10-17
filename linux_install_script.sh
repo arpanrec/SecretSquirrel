@@ -35,6 +35,7 @@ fi
 sudo systemctl disable --now "${SECURE_SERVER_SYSTEMD_SERVICE_NAME}" || true
 
 go build -o "secureserver"
+sudo rm -rf "${SECURE_SERVER_DIR}/secureserver" ./secureserver "${SECURE_SERVER_DIR}/config.json"
 sudo mv ./secureserver "${SECURE_SERVER_DIR}/secureserver"
 sudo cp ./config-prod.json "${SECURE_SERVER_DIR}/config.json"
 sudo userdel -r "${SECURE_SERVER_USER}" || true
