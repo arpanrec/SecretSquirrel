@@ -5,6 +5,7 @@ SECURE_SERVER_DIR=/opt/secureserver
 SECURE_SERVER_USER=secureserver
 SECURE_SERVER_GROUP=secureserver
 SECURE_SERVER_SYSTEMD_SERVICE_NAME=secureserver.service
+sudo mkdir -p "${SECURE_SERVER_DIR}"
 
 echo "Installing Secure Server"
 echo "This script requires sudo privileges"
@@ -33,7 +34,6 @@ fi
 
 sudo systemctl disable --now "${SECURE_SERVER_SYSTEMD_SERVICE_NAME}" || true
 
-sudo mkdir -p "${SECURE_SERVER_DIR}"
 go build --output "secureserver"
 sudo mv ./secureserver "${SECURE_SERVER_DIR}/secureserver"
 sudo cp ./config-prod.json "${SECURE_SERVER_DIR}/config.json"
