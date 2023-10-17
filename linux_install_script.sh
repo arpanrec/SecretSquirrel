@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -ex
+set -e
 
 SECURE_SERVER_DIR=/opt/secureserver
 SECURE_SERVER_USER=secureserver
