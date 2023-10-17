@@ -102,15 +102,16 @@ func cetCert(dnsAltNames []string, extKeyUsage []x509.ExtKeyUsage, isCA bool) (s
 	subjectKeyID := sha1.Sum(certPrivKey.PublicKey.N.Bytes())
 
 	cert := &x509.Certificate{
-		SerialNumber:   certSerialNumber,
-		NotBefore:      time.Now(),
-		NotAfter:       time.Now().AddDate(0, 0, 30),
-		SubjectKeyId:   subjectKeyID[:],
-		ExtKeyUsage:    extKeyUsage,
-		KeyUsage:       x509.KeyUsageDigitalSignature,
-		DNSNames:       dnsAltNames,
-		IsCA:           isCA,
-		AuthorityKeyId: pkiCurrentConfig.CaCert.SubjectKeyId,
+		SerialNumber:          certSerialNumber,
+		NotBefore:             time.Now(),
+		NotAfter:              time.Now().AddDate(0, 0, 30),
+		SubjectKeyId:          subjectKeyID[:],
+		ExtKeyUsage:           extKeyUsage,
+		KeyUsage:              x509.KeyUsageDigitalSignature,
+		DNSNames:              dnsAltNames,
+		IsCA:                  isCA,
+		AuthorityKeyId:        pkiCurrentConfig.CaCert.SubjectKeyId,
+		BasicConstraintsValid: true,
 	}
 
 	certBytes, err := x509.CreateCertificate(rand.Reader,
