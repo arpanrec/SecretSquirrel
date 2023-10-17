@@ -53,7 +53,7 @@ type MasterConfig struct {
 type HostingConfig struct {
 	Domain      string `json:"domain"`
 	Port        int    `json:"port"`
-	TlsEnable   bool   `json:"tls_enable"`
+	TlsEnable   bool   `json:"tls_enabled"`
 	TlsCertFile string `json:"tls_cert_file"`
 	TlsKeyFile  string `json:"tls_key_file"`
 }
