@@ -1,7 +1,10 @@
 {
     "server": {
-        "port": 8200,
-        "domain": "localhost"
+        "port": 443,
+        "domain": "secureserver.arpanrec.com",
+        "tls_enabled": true,
+        "tls_cert_file": "/etc/letsencrypt/live/secureserver.arpanrec.com/fullchain.pem",
+        "tls_key_file": "/etc/letsencrypt/live/secureserver.arpanrec.com/privkey.pem"
     },
     "encryption": {
         "gpg_private_key_file": "INIT_GPG_PRIVATE_KEY",

@@ -3,9 +3,11 @@ package cmd
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/arpanrec/secureserver/internal/middleware"
 	"github.com/arpanrec/secureserver/internal/routehandlers"
+	"github.com/arpanrec/secureserver/internal/serverconfig"
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,5 +26,14 @@ func Runner() {
 	apiRouterV1.Match([]string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
 		"/files/*any", routehandlers.FileServerHandler())
 	apiRouterV1.PUT("/pki/*any", routehandlers.PkiHandler())
-	log.Fatal(r.Run(":8080"))
+
+	serverHosting := serverconfig.GetConfig().Hosting
+
+	if serverHosting.TlsEnable {
+		log.Fatal(r.RunTLS(
+			":"+strconv.Itoa(serverHosting.Port),
+			serverHosting.TlsCertFile,
+			serverHosting.TlsKeyFile))
+	}
+	log.Fatal(r.Run(":" + strconv.Itoa(serverHosting.Port)))
 }
