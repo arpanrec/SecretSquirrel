@@ -14,6 +14,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/arpanrec/secureserver/internal/common"
 	"github.com/arpanrec/secureserver/internal/serverconfig"
 )
 
@@ -61,22 +62,10 @@ func getPkiConfig() serverconfig.PkiConfig {
 
 		if pkiConfigVar.CaDeleteKeys {
 			log.Println("Deleting CA key files")
-			errRemoveKey := os.Remove(pkiConfigVar.CaPrivateKeyFile)
-			if errRemoveKey != nil {
-				log.Fatalln("Error deleting CA key file: ", errRemoveKey)
-			}
-			errRemoveKey = os.Remove(pkiConfigVar.CaPrivateKeyNoPasswordFile)
-			if errRemoveKey != nil {
-				log.Fatalln("Error deleting CA key file: ", errRemoveKey)
-			}
-			errRemoveKey = os.Remove(pkiConfigVar.CaPrivateKeyPasswordFile)
-			if errRemoveKey != nil {
-				log.Fatalln("Error deleting CA key file: ", errRemoveKey)
-			}
-			errRemoveKey = os.Remove(pkiConfigVar.CaCertFile)
-			if errRemoveKey != nil {
-				log.Fatalln("Error deleting CA key file: ", errRemoveKey)
-			}
+			common.DeleteFileSureOrStop(pkiConfigVar.CaPrivateKeyFile)
+			common.DeleteFileSureOrStop(pkiConfigVar.CaPrivateKeyNoPasswordFile)
+			common.DeleteFileSureOrStop(pkiConfigVar.CaPrivateKeyPasswordFile)
+			common.DeleteFileSureOrStop(pkiConfigVar.CaCertFile)
 		}
 	})
 	mu.Unlock()
@@ -113,15 +102,16 @@ func cetCert(dnsAltNames []string, extKeyUsage []x509.ExtKeyUsage, isCA bool) (s
 	subjectKeyID := sha1.Sum(certPrivKey.PublicKey.N.Bytes())
 
 	cert := &x509.Certificate{
-		SerialNumber:   certSerialNumber,
-		NotBefore:      time.Now(),
-		NotAfter:       time.Now().AddDate(0, 0, 30),
-		SubjectKeyId:   subjectKeyID[:],
-		ExtKeyUsage:    extKeyUsage,
-		KeyUsage:       x509.KeyUsageDigitalSignature,
-		DNSNames:       dnsAltNames,
-		IsCA:           isCA,
-		AuthorityKeyId: pkiCurrentConfig.CaCert.SubjectKeyId,
+		SerialNumber:          certSerialNumber,
+		NotBefore:             time.Now(),
+		NotAfter:              time.Now().AddDate(0, 0, 30),
+		SubjectKeyId:          subjectKeyID[:],
+		ExtKeyUsage:           extKeyUsage,
+		KeyUsage:              x509.KeyUsageDigitalSignature,
+		DNSNames:              dnsAltNames,
+		IsCA:                  isCA,
+		AuthorityKeyId:        pkiCurrentConfig.CaCert.SubjectKeyId,
+		BasicConstraintsValid: true,
 	}
 
 	certBytes, err := x509.CreateCertificate(rand.Reader,

@@ -7,13 +7,18 @@ import (
 	"os"
 )
 
-func DeleteFile(l string) (bool, error) {
-	err := os.Remove(l)
-	if err != nil {
-		log.Println("Error deleting file: ", err)
-		return false, err
+func DeleteFileSureOrStop(l string) {
+	log.Println("Deleting file: ", l)
+	_, err := os.Stat(l)
+	if os.IsNotExist(err) {
+		log.Println("File does not exist: ", l)
+	} else {
+		log.Println("Deleting file: ", l)
+		err := os.Remove(l)
+		if err != nil {
+			log.Fatalln("Error deleting file: ", err)
+		}
 	}
-	return true, nil
 }
 
 func HttpResponseWriter(w http.ResponseWriter, code int, body string) {

@@ -47,6 +47,15 @@ type MasterConfig struct {
 	PkiConfig  PkiConfig             `json:"pki"`
 	Storage    StorageConfig         `json:"storage"`
 	UserDb     map[string]UserConfig `json:"users"`
+	Hosting    HostingConfig         `json:"server"`
+}
+
+type HostingConfig struct {
+	Domain      string `json:"domain"`
+	Port        int    `json:"port"`
+	TlsEnable   bool   `json:"tls_enabled"`
+	TlsCertFile string `json:"tls_cert_file"`
+	TlsKeyFile  string `json:"tls_key_file"`
 }
 
 func GetConfig() MasterConfig {
@@ -61,6 +70,7 @@ func GetConfig() MasterConfig {
 		if er != nil {
 			log.Fatalln("Error reading config file", er)
 		}
+		log.Println("Config file read successfully : \n", string(configJson))
 		err := json.Unmarshal(configJson, &masterServerConfig)
 		if err != nil {
 			log.Fatalln("Error Unmarshal config file ", err)
