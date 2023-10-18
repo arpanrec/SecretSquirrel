@@ -1,10 +1,10 @@
 {
     "server": {
         "port": 443,
-        "domain": "secureserver.arpanrec.com",
+        "domain": "172-105-49-235.ip.linodeusercontent.com",
         "tls_enabled": true,
-        "tls_cert_file": "/etc/letsencrypt/live/secureserver.arpanrec.com/fullchain.pem",
-        "tls_key_file": "/etc/letsencrypt/live/secureserver.arpanrec.com/privkey.pem"
+        "tls_cert_file": "/etc/letsencrypt/live/172-105-49-235.ip.linodeusercontent.com/fullchain.pem",
+        "tls_key_file": "/etc/letsencrypt/live/172-105-49-235.ip.linodeusercontent.com/privkey.pem"
     },
     "encryption": {
         "gpg_private_key_file": "INIT_GPG_PRIVATE_KEY",

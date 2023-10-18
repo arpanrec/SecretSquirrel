@@ -35,9 +35,10 @@ fi
 sudo systemctl disable --now "${SECURE_SERVER_SYSTEMD_SERVICE_NAME}" || true
 
 sudo rm -rf "${SECURE_SERVER_DIR}/secureserver" ./secureserver "${SECURE_SERVER_DIR}/config.json"
-go build -o "secureserver"
+go build -o "secureserver" ./main.go
 sudo mv ./secureserver "${SECURE_SERVER_DIR}/secureserver"
 sudo cp ./config-prod.json "${SECURE_SERVER_DIR}/config.json"
+sudo setcap 'cap_net_bind_service=+ep' "${SECURE_SERVER_DIR}/secureserver"
 sudo userdel -r "${SECURE_SERVER_USER}" || true
 sudo groupdel "${SECURE_SERVER_GROUP}" || true
 sudo groupadd --system "${SECURE_SERVER_GROUP}"
@@ -62,7 +63,7 @@ sudo docker run --rm \
     --non-interactive \
     --agree-tos \
     --email "${INIT_EMAIL_ID}" \
-    --domains secureserver.arpanrec.com \
+    --domains 172-105-49-235.ip.linodeusercontent.com \
     --preferred-challenges http-01 >/dev/null
 
 cat <<EOF | sudo tee /etc/systemd/system/"${SECURE_SERVER_SYSTEMD_SERVICE_NAME}" >/dev/null
