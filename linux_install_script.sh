@@ -48,7 +48,7 @@ sudo chmod 700 "${SECURE_SERVER_DIR}/secureserver"
 sudo setcap 'cap_net_bind_service=+eip' "${SECURE_SERVER_DIR}/secureserver"
 
 sudo ufw allow 80/tcp
-sudo ufw allow 433/tcp
+sudo ufw allow 443/tcp
 sudo systemctl enable --now ufw
 sudo sudo systemctl restart ufw
 sudo ufw --force enable
