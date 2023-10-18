@@ -7,25 +7,25 @@
         "tls_key_file": "/etc/letsencrypt/live/172-105-49-235.ip.linodeusercontent.com/privkey.pem"
     },
     "encryption": {
-        "gpg_private_key_file": "INIT_GPG_PRIVATE_KEY",
-        "gpg_public_key_file": "INIT_GPG_PRIVATE_KEY",
-        "gpg_private_key_password_file": "INIT_GPG_PRIVATE_KEY_PASSWORD",
+        "gpg_private_key_file": "/opt/secureserver/INIT_GPG_PRIVATE_KEY",
+        "gpg_public_key_file": "/opt/secureserver/INIT_GPG_PRIVATE_KEY",
+        "gpg_private_key_password_file": "/opt/secureserver/INIT_GPG_PRIVATE_KEY_PASSWORD",
         "pgp_delete_key_files_after_startup": true
     },
     "storage": {
         "type": "file",
         "config": {
-            "path": "data"
+            "path": "/opt/secureserver/data"
         }
     },
     "users": {
         "arpanrec": null
     },
     "pki": {
-        "openssl_root_ca_key_file": "INIT_OPENSSL_ROOT_CA_KEY",
-        "openssl_root_ca_cert_file": "INIT_OPENSSL_ROOT_CA_CERT",
-        "openssl_root_ca_key_password_file": "INIT_OPENSSL_ROOT_CA_KEY_PASSWORD",
-        "openssl_root_ca_no_password_key_file": "INIT_OPENSSL_ROOT_CA_NO_PASSWORD_KEY",
+        "openssl_root_ca_key_file": "/opt/secureserver/INIT_OPENSSL_ROOT_CA_KEY",
+        "openssl_root_ca_cert_file": "/opt/secureserver/INIT_OPENSSL_ROOT_CA_CERT",
+        "openssl_root_ca_key_password_file": "/opt/secureserver/INIT_OPENSSL_ROOT_CA_KEY_PASSWORD",
+        "openssl_root_ca_no_password_key_file": "/opt/secureserver/INIT_OPENSSL_ROOT_CA_NO_PASSWORD_KEY",
         "openssl_delete_key_files_after_startup": true
     }
 }

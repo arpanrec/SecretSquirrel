@@ -38,13 +38,14 @@ sudo rm -rf "${SECURE_SERVER_DIR}/secureserver" ./secureserver "${SECURE_SERVER_
 go build -o "secureserver" ./main.go
 sudo mv ./secureserver "${SECURE_SERVER_DIR}/secureserver"
 sudo cp ./config-prod.json "${SECURE_SERVER_DIR}/config.json"
-sudo setcap 'cap_net_bind_service=+ep' "${SECURE_SERVER_DIR}/secureserver"
 sudo userdel -r "${SECURE_SERVER_USER}" || true
 sudo groupdel "${SECURE_SERVER_GROUP}" || true
 sudo groupadd --system "${SECURE_SERVER_GROUP}"
 sudo useradd -s /bin/false --home-dir "/home/${SECURE_SERVER_USER}" --no-create-home \
     --system --gid "${SECURE_SERVER_GROUP}" "${SECURE_SERVER_USER}" || true
 sudo chown -R "${SECURE_SERVER_USER}":"${SECURE_SERVER_GROUP}" "${SECURE_SERVER_DIR}"
+sudo chmod 700 "${SECURE_SERVER_DIR}/secureserver"
+sudo setcap 'cap_net_bind_service=+eip' "${SECURE_SERVER_DIR}/secureserver"
 
 sudo ufw allow 80/tcp
 sudo ufw allow 433/tcp
