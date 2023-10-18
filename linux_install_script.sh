@@ -67,6 +67,8 @@ sudo docker run --rm \
     --domains 172-105-49-235.ip.linodeusercontent.com \
     --preferred-challenges http-01 >/dev/null
 
+sudo chmod 755 -R /etc/letsencrypt/live
+
 cat <<EOF | sudo tee /etc/systemd/system/"${SECURE_SERVER_SYSTEMD_SERVICE_NAME}" >/dev/null
 [Unit]
 Description=Secure Server
