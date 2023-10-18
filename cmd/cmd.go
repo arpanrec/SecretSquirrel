@@ -30,7 +30,7 @@ func Runner() {
 	serverHosting := serverconfig.GetConfig().Hosting
 
 	if serverHosting.TlsEnable {
-		log.Fatal(r.RunTLS(
+		log.Fatal(r.RunTLS("0.0.0.0"+
 			":"+strconv.Itoa(serverHosting.Port),
 			serverHosting.TlsCertFile,
 			serverHosting.TlsKeyFile))
