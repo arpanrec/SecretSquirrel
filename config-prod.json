@@ -9,7 +9,7 @@
   },
   "encryption": {
     "gpg_private_key_file": "/opt/secureserver/INIT_GPG_PRIVATE_KEY",
-    "gpg_public_key_file": "/opt/secureserver/INIT_GPG_PRIVATE_KEY",
+    "gpg_public_key_file": "/opt/secureserver/INIT_GPG_PUBLIC_KEY",
     "gpg_private_key_password_file": "/opt/secureserver/INIT_GPG_PRIVATE_KEY_PASSWORD",
     "pgp_delete_key_files_after_startup": true
   },
