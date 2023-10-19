@@ -6,10 +6,13 @@ import (
 	"crypto/rsa"
 	"crypto/sha1"
 	"crypto/x509"
+	"encoding/json"
 	"encoding/pem"
+	"errors"
 	"log"
 	"math/big"
 	"os/exec"
+	"strings"
 	"sync"
 	"time"
 
@@ -22,6 +25,15 @@ var (
 	mu           = &sync.Mutex{}
 	oncePki      = &sync.Once{}
 )
+
+type pkiRequest struct {
+	DnsNames []string `json:"dns_names"`
+}
+
+type pkiResponse struct {
+	Cert string `json:"cert"`
+	Key  string `json:"key"`
+}
 
 func getPkiConfig() appconfig.ApplicationPkiConfig {
 	mu.Lock()
@@ -136,12 +148,44 @@ func cetCert(dnsAltNames []string, extKeyUsage []x509.ExtKeyUsage, isCA bool) (s
 	return certPEM.String(), certPrivKeyPEM.String(), nil
 }
 
-func GetServerCert(dnsNames []string) (string, string, error) {
+func getServerCert(dnsNames []string) (string, string, error) {
 	return cetCert(dnsNames,
 		[]x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
 		false)
 }
 
-func GetClientCert(dnsNames []string) (string, string, error) {
+func getClientCert(dnsNames []string) (string, string, error) {
 	return cetCert(dnsNames, []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth}, false)
+}
+
+func GetCert(locationPath *string, body *[]byte) (string, error) {
+	pkiRequestJson := pkiRequest{}
+	pkiResponseJson := pkiResponse{}
+
+	err := json.Unmarshal(*body, &pkiRequestJson)
+	if err != nil {
+		return "", err
+	}
+	if strings.HasSuffix(*locationPath, "clientcert") {
+		cert, k, e := getClientCert(pkiRequestJson.DnsNames)
+		if e != nil {
+			return "", e
+		}
+		pkiResponseJson.Cert = cert
+		pkiResponseJson.Key = k
+	} else if strings.HasSuffix(*locationPath, "servercert") {
+		cert, k, e := getServerCert(pkiRequestJson.DnsNames)
+		if e != nil {
+			return "", e
+		}
+		pkiResponseJson.Cert = cert
+		pkiResponseJson.Key = k
+	} else {
+		return "", errors.New("invalid path for pki: " + *locationPath)
+	}
+	pkiResponseJsonBytes, err := json.Marshal(pkiResponseJson)
+	if err != nil {
+		return "", err
+	}
+	return string(pkiResponseJsonBytes), nil
 }

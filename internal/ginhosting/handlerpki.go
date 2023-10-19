@@ -1,22 +1,10 @@
 package ginhosting
 
 import (
-	"encoding/json"
 	"github.com/arpanrec/secureserver/internal/pki"
 	"github.com/gin-gonic/gin"
 	"io"
-	"log"
-	"strings"
 )
-
-type pkiRequest struct {
-	DnsNames []string `json:"dns_names"`
-}
-
-type pkiResponse struct {
-	Cert string `json:"cert"`
-	Key  string `json:"key"`
-}
 
 func PkiHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -28,43 +16,14 @@ func PkiHandler() gin.HandlerFunc {
 			return
 		}
 		locationPath := c.GetString("locationPath")
-		pkiRequestJson := pkiRequest{}
 
-		err := json.Unmarshal(body, &pkiRequestJson)
+		r, err := pki.GetCert(&locationPath, &body)
 		if err != nil {
 			c.JSON(500, gin.H{
-				"error": errReadAll.Error(),
+				"error": err.Error(),
 			})
 			return
 		}
-		log.Println("pkiRequestJson: ", pkiRequestJson)
-		var pkiResponseJson pkiResponse
-		if strings.HasSuffix(locationPath, "clientcert") {
-			cert, k, e := pki.GetClientCert(pkiRequestJson.DnsNames)
-			if e != nil {
-				c.JSON(500, gin.H{
-					"error": e.Error(),
-				})
-				return
-			}
-			pkiResponseJson.Cert = cert
-			pkiResponseJson.Key = k
-		} else if strings.HasSuffix(locationPath, "servercert") {
-			cert, k, e := pki.GetServerCert(pkiRequestJson.DnsNames)
-			if e != nil {
-				c.JSON(500, gin.H{
-					"error": e.Error(),
-				})
-				return
-			}
-			pkiResponseJson.Cert = cert
-			pkiResponseJson.Key = k
-		} else {
-			c.JSON(500, gin.H{
-				"error": "Invalid path",
-			})
-			return
-		}
-		c.JSON(201, pkiResponseJson)
+		c.JSON(201, r)
 	}
 }
