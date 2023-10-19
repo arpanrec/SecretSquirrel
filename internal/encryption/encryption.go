@@ -6,46 +6,36 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/arpanrec/secureserver/internal/appconfig"
 	"github.com/arpanrec/secureserver/internal/common"
-	"github.com/arpanrec/secureserver/internal/serverconfig"
 
 	"github.com/ProtonMail/gopenpgp/v2/helper"
 )
 
-var encryptionConfig serverconfig.EncryptionConfig
+var encryptionConfig appconfig.ApplicationEncryptionConfig
 
 var mu = &sync.Mutex{}
 var mo = &sync.Once{}
 
-func setGPGInfo() serverconfig.EncryptionConfig {
+func setGPGInfo() appconfig.ApplicationEncryptionConfig {
 	mu.Lock()
 	mo.Do(func() {
-		encryptionConfig = serverconfig.GetConfig().Encryption
-		gpgPrivateKey, err := os.ReadFile(encryptionConfig.GPGPrivateKeyFile)
-		if err != nil {
-			log.Fatalln("Error reading private key: ", err)
-		}
-		encryptionConfig.GPGPrivateKey = string(gpgPrivateKey)
-
-		gpgPublicKey, err1 := os.ReadFile(encryptionConfig.GPGPublicKeyFile)
-		if err1 != nil {
-			log.Fatalln("Error reading public key: ", err1)
-		}
-		encryptionConfig.GPGPublicKey = string(gpgPublicKey)
+		encryptionConfig = appconfig.GetConfig().Encryption
+		encryptionConfig.GPGPrivateKey = common.ReadFileStringSureOrStop(&encryptionConfig.GPGPrivateKeyFile)
+		encryptionConfig.GPGPublicKey = common.ReadFileStringSureOrStop(&encryptionConfig.GPGPublicKeyFile)
 
 		gpgPassphrase, err2 := os.ReadFile(encryptionConfig.GPGPassphraseFile)
 		if err2 != nil {
 			log.Fatalln("Error reading passphrase: ", err2)
 		}
 		gpgPassphraseSanitized := strings.Split(string(gpgPassphrase), "\n")[0]
-		log.Printf("Passphrase: %s", gpgPassphraseSanitized)
 		encryptionConfig.GPGPrivateKeyPassphrase = []byte(gpgPassphraseSanitized)
 
 		if encryptionConfig.GPGDeleteKeys {
 			log.Println("Deleting keys")
-			common.DeleteFileSureOrStop(encryptionConfig.GPGPrivateKeyFile)
-			common.DeleteFileSureOrStop(encryptionConfig.GPGPublicKeyFile)
-			common.DeleteFileSureOrStop(encryptionConfig.GPGPassphraseFile)
+			common.DeleteFileSureOrStop(&encryptionConfig.GPGPrivateKeyFile)
+			common.DeleteFileSureOrStop(&encryptionConfig.GPGPublicKeyFile)
+			common.DeleteFileSureOrStop(&encryptionConfig.GPGPassphraseFile)
 		}
 	})
 

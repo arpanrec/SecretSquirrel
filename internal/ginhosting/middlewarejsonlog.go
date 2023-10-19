@@ -1,4 +1,4 @@
-package middleware
+package ginhosting
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"log"
 )
 
-func JsonLoggerMiddleware() gin.HandlerFunc {
+func jsonLoggerMiddleware() gin.HandlerFunc {
 	return gin.LoggerWithFormatter(
 		func(params gin.LogFormatterParams) string {
 			logMap := make(map[string]interface{})

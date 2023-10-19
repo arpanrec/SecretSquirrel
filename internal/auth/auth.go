@@ -11,17 +11,17 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/arpanrec/secureserver/internal/serverconfig"
+	"github.com/arpanrec/secureserver/internal/appconfig"
 )
 
 var (
-	usersDb map[string]serverconfig.UserConfig
+	usersDb map[string]appconfig.UserConfig
 	mo      = &sync.Once{}
 )
 
-func getUsers() map[string]serverconfig.UserConfig {
+func getUsers() map[string]appconfig.UserConfig {
 	mo.Do(func() {
-		usersDb = serverconfig.GetConfig().UserDb
+		usersDb = appconfig.GetConfig().UserDb
 	})
 	return usersDb
 }

@@ -1,15 +1,16 @@
-package middleware
+package ginhosting
 
 import (
-	"github.com/arpanrec/secureserver/internal/auth"
-	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+
+	"github.com/arpanrec/secureserver/internal/auth"
+	"github.com/gin-gonic/gin"
 )
 
-func AuthMiddleWare() gin.HandlerFunc {
+func authMiddleWare() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		log.Println("AuthMiddleWare")
+		log.Println("authMiddleWare")
 		authHeader := c.GetHeader("Authorization")
 		username, err := auth.GetUserDetails(authHeader)
 		if err != nil {
@@ -17,6 +18,5 @@ func AuthMiddleWare() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		}
 		c.Set("username", username)
-		return
 	}
 }

@@ -5,16 +5,17 @@ SECURE_SERVER_DIR=/opt/secureserver
 SECURE_SERVER_USER=secureserver
 SECURE_SERVER_GROUP=secureserver
 SECURE_SERVER_SYSTEMD_SERVICE_NAME=secureserver.service
+SECURE_SERVER_CONFIG_FILE_PATH="${SECURE_SERVER_DIR}/config.json"
 sudo mkdir -p "${SECURE_SERVER_DIR}"
 
-echo "Installing Secure Server"
-echo "This script requires sudo privileges"
-echo "This script will install the Secure Server as a systemd service"
-echo "This script will install the Secure Server to /opt/secureserver"
-echo "This script will create a user and group named secureserver"
-echo "This script will create a systemd service named secureserver.service"
-echo "Sourcing .env file if it exists"
+echo 'Installing Secure Server, This script requires sudo privileges.
+User : secureserver
+Group : secureserver
+WorkingDirectory : /opt/secureserver
+Systemd Service Name : secureserver.service
+'
 
+echo "Sourcing .env file if it exists."
 if [ -f .env ]; then
     # shellcheck disable=SC1091
     source .env
@@ -37,7 +38,7 @@ sudo systemctl disable --now "${SECURE_SERVER_SYSTEMD_SERVICE_NAME}" || true
 sudo rm -rf "${SECURE_SERVER_DIR}/secureserver" ./secureserver "${SECURE_SERVER_DIR}/config.json"
 go build -o "secureserver" ./main.go
 sudo mv ./secureserver "${SECURE_SERVER_DIR}/secureserver"
-sudo cp ./config-prod.json "${SECURE_SERVER_DIR}/config.json"
+sudo cp ./config-prod.json "${SECURE_SERVER_CONFIG_FILE_PATH}"
 sudo userdel -r "${SECURE_SERVER_USER}" || true
 sudo groupdel "${SECURE_SERVER_GROUP}" || true
 sudo groupadd --system "${SECURE_SERVER_GROUP}"
@@ -80,7 +81,6 @@ User=${SECURE_SERVER_USER}
 Group=${SECURE_SERVER_GROUP}
 WorkingDirectory=${SECURE_SERVER_DIR}
 ExecStart=${SECURE_SERVER_DIR}/secureserver
-Environment=SECURE_SERVER_CONFIG_FILE_PATH=${SECURE_SERVER_DIR}/config.json
 Restart=always
 
 [Install]

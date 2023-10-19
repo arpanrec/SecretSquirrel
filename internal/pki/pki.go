@@ -6,28 +6,39 @@ import (
 	"crypto/rsa"
 	"crypto/sha1"
 	"crypto/x509"
+	"encoding/json"
 	"encoding/pem"
+	"errors"
 	"log"
 	"math/big"
-	"os"
 	"os/exec"
+	"strings"
 	"sync"
 	"time"
 
+	"github.com/arpanrec/secureserver/internal/appconfig"
 	"github.com/arpanrec/secureserver/internal/common"
-	"github.com/arpanrec/secureserver/internal/serverconfig"
 )
 
 var (
-	pkiConfigVar serverconfig.PkiConfig
+	pkiConfigVar appconfig.ApplicationPkiConfig
 	mu           = &sync.Mutex{}
 	oncePki      = &sync.Once{}
 )
 
-func getPkiConfig() serverconfig.PkiConfig {
+type pkiRequest struct {
+	DnsNames []string `json:"dns_names"`
+}
+
+type pkiResponse struct {
+	Cert string `json:"cert"`
+	Key  string `json:"key"`
+}
+
+func getPkiConfig() appconfig.ApplicationPkiConfig {
 	mu.Lock()
 	oncePki.Do(func() {
-		pkiConfigVar = serverconfig.GetConfig().PkiConfig
+		pkiConfigVar = appconfig.GetConfig().PkiConfig
 		log.Println("Removing password from CA key: ", pkiConfigVar.CaPrivateKeyFile)
 		removePassCmd := exec.Command("openssl",
 			"rsa",
@@ -38,21 +49,14 @@ func getPkiConfig() serverconfig.PkiConfig {
 		if err := removePassCmd.Run(); err != nil {
 			log.Fatal("Error removing password from CA key: ", err)
 		}
-		caCertBytes, err := os.ReadFile(pkiConfigVar.CaCertFile)
-		if err != nil {
-			log.Fatalln("Error reading ca cert file", err)
-		}
+		caCertBytes := common.ReadFileSureOrStop(&pkiConfigVar.CaCertFile)
 		caCertBlock, _ := pem.Decode(caCertBytes)
 		CaCert, errParseCert := x509.ParseCertificate(caCertBlock.Bytes)
 		if errParseCert != nil {
 			log.Fatalln("Error parsing ca cert", errParseCert)
 		}
 		pkiConfigVar.CaCert = CaCert
-		CaPrivateKeyNoPasswordFile := pkiConfigVar.CaPrivateKeyNoPasswordFile
-		caPrivKeyBytes, errReadNpPk := os.ReadFile(CaPrivateKeyNoPasswordFile)
-		if errReadNpPk != nil {
-			log.Fatalln("Error reading ca private key", errReadNpPk)
-		}
+		caPrivKeyBytes := common.ReadFileSureOrStop(&pkiConfigVar.CaPrivateKeyNoPasswordFile)
 		caPrivKeyBlock, _ := pem.Decode(caPrivKeyBytes)
 		caPrivKey, errParsePKCS8 := x509.ParsePKCS8PrivateKey(caPrivKeyBlock.Bytes)
 		if errParsePKCS8 != nil {
@@ -62,10 +66,10 @@ func getPkiConfig() serverconfig.PkiConfig {
 
 		if pkiConfigVar.CaDeleteKeys {
 			log.Println("Deleting CA key files")
-			common.DeleteFileSureOrStop(pkiConfigVar.CaPrivateKeyFile)
-			common.DeleteFileSureOrStop(pkiConfigVar.CaPrivateKeyNoPasswordFile)
-			common.DeleteFileSureOrStop(pkiConfigVar.CaPrivateKeyPasswordFile)
-			common.DeleteFileSureOrStop(pkiConfigVar.CaCertFile)
+			common.DeleteFileSureOrStop(&pkiConfigVar.CaPrivateKeyFile)
+			common.DeleteFileSureOrStop(&pkiConfigVar.CaPrivateKeyNoPasswordFile)
+			common.DeleteFileSureOrStop(&pkiConfigVar.CaPrivateKeyPasswordFile)
+			common.DeleteFileSureOrStop(&pkiConfigVar.CaCertFile)
 		}
 	})
 	mu.Unlock()
@@ -144,12 +148,44 @@ func cetCert(dnsAltNames []string, extKeyUsage []x509.ExtKeyUsage, isCA bool) (s
 	return certPEM.String(), certPrivKeyPEM.String(), nil
 }
 
-func GetServerCert(dnsNames []string) (string, string, error) {
+func getServerCert(dnsNames []string) (string, string, error) {
 	return cetCert(dnsNames,
 		[]x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
 		false)
 }
 
-func GetClientCert(dnsNames []string) (string, string, error) {
+func getClientCert(dnsNames []string) (string, string, error) {
 	return cetCert(dnsNames, []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth}, false)
+}
+
+func GetCert(locationPath *string, body *[]byte) (string, error) {
+	pkiRequestJson := pkiRequest{}
+	pkiResponseJson := pkiResponse{}
+
+	err := json.Unmarshal(*body, &pkiRequestJson)
+	if err != nil {
+		return "", err
+	}
+	if strings.HasSuffix(*locationPath, "clientcert") {
+		cert, k, e := getClientCert(pkiRequestJson.DnsNames)
+		if e != nil {
+			return "", e
+		}
+		pkiResponseJson.Cert = cert
+		pkiResponseJson.Key = k
+	} else if strings.HasSuffix(*locationPath, "servercert") {
+		cert, k, e := getServerCert(pkiRequestJson.DnsNames)
+		if e != nil {
+			return "", e
+		}
+		pkiResponseJson.Cert = cert
+		pkiResponseJson.Key = k
+	} else {
+		return "", errors.New("invalid path for pki: " + *locationPath)
+	}
+	pkiResponseJsonBytes, err := json.Marshal(pkiResponseJson)
+	if err != nil {
+		return "", err
+	}
+	return string(pkiResponseJsonBytes), nil
 }

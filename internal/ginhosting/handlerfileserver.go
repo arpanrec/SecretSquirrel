@@ -1,4 +1,4 @@
-package routehandlers
+package ginhosting
 
 import (
 	"github.com/arpanrec/secureserver/internal/fileserver"
@@ -6,7 +6,7 @@ import (
 	"io"
 )
 
-func FileServerHandler() gin.HandlerFunc {
+func fileServerHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		body, errReadAll := io.ReadAll(c.Request.Body)
 		if errReadAll != nil {

@@ -1,4 +1,4 @@
-package routehandlers
+package ginhosting
 
 import (
 	"github.com/arpanrec/secureserver/internal/tfstate"
@@ -7,9 +7,9 @@ import (
 	"log"
 )
 
-func TfStateHandler() gin.HandlerFunc {
+func tfStateHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		log.Println("Inside TfStateHandler")
+		log.Println("Inside tfStateHandler")
 		body, errReadAll := io.ReadAll(c.Request.Body)
 		if errReadAll != nil {
 			c.JSON(500, gin.H{
