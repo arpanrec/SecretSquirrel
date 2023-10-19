@@ -1,4 +1,4 @@
-package cmd
+package secureserver
 
 import (
 	"github.com/arpanrec/secureserver/internal/appconfig"
