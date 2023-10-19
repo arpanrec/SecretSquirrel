@@ -1,7 +1,7 @@
 package physical
 
 import (
-	"github.com/arpanrec/secureserver/internal/serverconfig"
+	"github.com/arpanrec/secureserver/internal/appconfig"
 	"log"
 	"os"
 	"path"
@@ -21,7 +21,7 @@ var fileStorageConfigVar FileStorageConfig
 
 func getFileStorageConfigVar() FileStorageConfig {
 	oncePhysicalFile.Do(func() {
-		storagePath := serverconfig.GetConfig().Storage.Config["path"].(string)
+		storagePath := appconfig.GetConfig().Storage.Config["path"].(string)
 		if storagePath == "" {
 			log.Fatalln("Fatal Storage path not set")
 		}

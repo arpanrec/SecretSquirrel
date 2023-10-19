@@ -6,21 +6,21 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/arpanrec/secureserver/internal/appconfig"
 	"github.com/arpanrec/secureserver/internal/common"
-	"github.com/arpanrec/secureserver/internal/serverconfig"
 
 	"github.com/ProtonMail/gopenpgp/v2/helper"
 )
 
-var encryptionConfig serverconfig.EncryptionConfig
+var encryptionConfig appconfig.ApplicationEncryptionConfig
 
 var mu = &sync.Mutex{}
 var mo = &sync.Once{}
 
-func setGPGInfo() serverconfig.EncryptionConfig {
+func setGPGInfo() appconfig.ApplicationEncryptionConfig {
 	mu.Lock()
 	mo.Do(func() {
-		encryptionConfig = serverconfig.GetConfig().Encryption
+		encryptionConfig = appconfig.GetConfig().Encryption
 		encryptionConfig.GPGPrivateKey = common.ReadFileStringSureOrStop(&encryptionConfig.GPGPrivateKeyFile)
 		encryptionConfig.GPGPublicKey = common.ReadFileStringSureOrStop(&encryptionConfig.GPGPublicKeyFile)
 

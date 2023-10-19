@@ -4,9 +4,9 @@ import (
 	"log"
 	"sync"
 
+	"github.com/arpanrec/secureserver/internal/appconfig"
 	"github.com/arpanrec/secureserver/internal/encryption"
 	"github.com/arpanrec/secureserver/internal/physical"
-	"github.com/arpanrec/secureserver/internal/serverconfig"
 )
 
 var pStorage physical.Storage
@@ -15,7 +15,7 @@ var once = &sync.Once{}
 
 func getStorage() physical.Storage {
 	once.Do(func() {
-		storageConfig := serverconfig.GetConfig().Storage
+		storageConfig := appconfig.GetConfig().Storage
 		storageType := storageConfig.StorageType
 		log.Print("Storage type set to ", storageType)
 		switch storageType {

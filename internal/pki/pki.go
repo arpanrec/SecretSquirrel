@@ -13,20 +13,20 @@ import (
 	"sync"
 	"time"
 
+	"github.com/arpanrec/secureserver/internal/appconfig"
 	"github.com/arpanrec/secureserver/internal/common"
-	"github.com/arpanrec/secureserver/internal/serverconfig"
 )
 
 var (
-	pkiConfigVar serverconfig.PkiConfig
+	pkiConfigVar appconfig.ApplicationPkiConfig
 	mu           = &sync.Mutex{}
 	oncePki      = &sync.Once{}
 )
 
-func getPkiConfig() serverconfig.PkiConfig {
+func getPkiConfig() appconfig.ApplicationPkiConfig {
 	mu.Lock()
 	oncePki.Do(func() {
-		pkiConfigVar = serverconfig.GetConfig().PkiConfig
+		pkiConfigVar = appconfig.GetConfig().PkiConfig
 		log.Println("Removing password from CA key: ", pkiConfigVar.CaPrivateKeyFile)
 		removePassCmd := exec.Command("openssl",
 			"rsa",

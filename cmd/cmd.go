@@ -5,13 +5,13 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/arpanrec/secureserver/internal/appconfig"
 	"github.com/arpanrec/secureserver/internal/middleware"
 	"github.com/arpanrec/secureserver/internal/routehandlers"
-	"github.com/arpanrec/secureserver/internal/serverconfig"
 	"github.com/gin-gonic/gin"
 )
 
-func ginRunner(serverHosting serverconfig.HostingConfig) {
+func ginRunner(serverHosting appconfig.ApplicationServerConfig) {
 	if serverHosting.DebugMode {
 		gin.SetMode(gin.DebugMode)
 	} else {
@@ -46,7 +46,7 @@ func ginRunner(serverHosting serverconfig.HostingConfig) {
 func Runner() {
 
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	serverHosting := serverconfig.GetConfig().Hosting
+	serverHosting := appconfig.GetConfig().ServerConfig
 	ginRunner(serverHosting)
 
 }

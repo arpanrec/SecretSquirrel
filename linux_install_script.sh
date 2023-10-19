@@ -81,7 +81,6 @@ User=${SECURE_SERVER_USER}
 Group=${SECURE_SERVER_GROUP}
 WorkingDirectory=${SECURE_SERVER_DIR}
 ExecStart=${SECURE_SERVER_DIR}/secureserver
-Environment=SECURE_SERVER_CONFIG_FILE_PATH=${SECURE_SERVER_CONFIG_FILE_PATH}
 Restart=always
 
 [Install]
