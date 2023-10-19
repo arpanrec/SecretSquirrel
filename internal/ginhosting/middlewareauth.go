@@ -1,10 +1,11 @@
 package ginhosting
 
 import (
-	"github.com/arpanrec/secureserver/internal/auth"
-	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+
+	"github.com/arpanrec/secureserver/internal/auth"
+	"github.com/gin-gonic/gin"
 )
 
 func authMiddleWare() gin.HandlerFunc {
@@ -17,6 +18,5 @@ func authMiddleWare() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		}
 		c.Set("username", username)
-		return
 	}
 }

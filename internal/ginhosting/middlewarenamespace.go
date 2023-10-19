@@ -1,8 +1,9 @@
 package ginhosting
 
 import (
-	"github.com/gin-gonic/gin"
 	"log"
+
+	"github.com/gin-gonic/gin"
 )
 
 func nameSpaceMiddleWare() gin.HandlerFunc {
@@ -12,6 +13,5 @@ func nameSpaceMiddleWare() gin.HandlerFunc {
 		locationPath := username + urlPath[7:]
 		c.Set("locationPath", locationPath)
 		log.Println("nameSpaceMiddleWare: Namespace is " + locationPath)
-		return
 	}
 }
