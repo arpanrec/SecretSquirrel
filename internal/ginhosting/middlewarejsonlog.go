@@ -1,4 +1,4 @@
-package middleware
+package ginhosting
 
 import (
 	"encoding/json"

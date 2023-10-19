@@ -1,4 +1,4 @@
-package routehandlers
+package ginhosting
 
 import (
 	"encoding/json"

@@ -1,4 +1,4 @@
-package routehandlers
+package ginhosting
 
 import (
 	"github.com/arpanrec/secureserver/internal/tfstate"

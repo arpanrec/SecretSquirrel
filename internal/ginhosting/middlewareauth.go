@@ -1,4 +1,4 @@
-package middleware
+package ginhosting
 
 import (
 	"github.com/arpanrec/secureserver/internal/auth"
