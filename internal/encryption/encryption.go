@@ -29,7 +29,6 @@ func setGPGInfo() serverconfig.EncryptionConfig {
 			log.Fatalln("Error reading passphrase: ", err2)
 		}
 		gpgPassphraseSanitized := strings.Split(string(gpgPassphrase), "\n")[0]
-		log.Printf("Passphrase: %s", gpgPassphraseSanitized)
 		encryptionConfig.GPGPrivateKeyPassphrase = []byte(gpgPassphraseSanitized)
 
 		if encryptionConfig.GPGDeleteKeys {
