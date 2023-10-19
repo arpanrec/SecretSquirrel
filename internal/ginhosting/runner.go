@@ -1,11 +1,12 @@
 package ginhosting
 
 import (
-	"github.com/arpanrec/secureserver/internal/appconfig"
-	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 	"strconv"
+
+	"github.com/arpanrec/secureserver/internal/appconfig"
+	"github.com/gin-gonic/gin"
 )
 
 func GinRunner(serverHosting appconfig.ApplicationServerConfig) {
@@ -32,8 +33,10 @@ func GinRunner(serverHosting appconfig.ApplicationServerConfig) {
 	apiRouterV1.PUT("/pki/*any", pkiHandler())
 
 	if serverHosting.TlsEnable {
-		log.Fatal(r.RunTLS("0.0.0.0"+
-			":"+strconv.Itoa(serverHosting.Port),
+		log.Println("Starting server on port", serverHosting.Port,
+			" TLS Cert File: ", serverHosting.TlsCertFile,
+			" TLS Key File: ", serverHosting.TlsKeyFile)
+		log.Fatal(r.RunTLS(":"+strconv.Itoa(serverHosting.Port),
 			serverHosting.TlsCertFile,
 			serverHosting.TlsKeyFile))
 	}
