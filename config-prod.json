@@ -3,7 +3,7 @@
     "port": 443,
     "domain": "172-105-38-210.ip.linodeusercontent.com",
     "tls_enabled": true,
-    "debug_mode": false,
+    "debug_mode": true,
     "tls_cert_file": "/etc/letsencrypt/live/172-105-38-210.ip.linodeusercontent.com/fullchain.pem",
     "tls_key_file": "/etc/letsencrypt/live/172-105-38-210.ip.linodeusercontent.com/privkey.pem"
   },
