@@ -16,7 +16,7 @@ func GinRunner(serverHosting appconfig.ApplicationServerConfig) {
 	}
 	r := gin.New()
 	r.Use(gin.Recovery())
-	r.Use(JsonLoggerMiddleware())
+	r.Use(jsonLoggerMiddleware())
 	err := r.SetTrustedProxies(nil)
 	if err != nil {
 		log.Fatalln("Error setting trusted proxies: ", err)
@@ -24,12 +24,12 @@ func GinRunner(serverHosting appconfig.ApplicationServerConfig) {
 	apiRouter := r.Group("/api")
 	log.Println("Starting server on port 8080")
 	apiRouterV1 := apiRouter.Group("/v1")
-	apiRouterV1.Use(AuthMiddleWare(), NameSpaceMiddleWare())
+	apiRouterV1.Use(authMiddleWare(), nameSpaceMiddleWare())
 	apiRouterV1.Match([]string{http.MethodGet, http.MethodPost, http.MethodPut, "LOCK", "UNLOCK"},
-		"/tfstate/*any", TfStateHandler())
+		"/tfstate/*any", tfStateHandler())
 	apiRouterV1.Match([]string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
-		"/files/*any", FileServerHandler())
-	apiRouterV1.PUT("/pki/*any", PkiHandler())
+		"/files/*any", fileServerHandler())
+	apiRouterV1.PUT("/pki/*any", pkiHandler())
 
 	if serverHosting.TlsEnable {
 		log.Fatal(r.RunTLS("0.0.0.0"+

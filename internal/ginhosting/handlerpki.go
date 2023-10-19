@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func PkiHandler() gin.HandlerFunc {
+func pkiHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		body, errReadAll := io.ReadAll(c.Request.Body)
 		if errReadAll != nil {

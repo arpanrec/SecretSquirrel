@@ -7,9 +7,9 @@ import (
 	"net/http"
 )
 
-func AuthMiddleWare() gin.HandlerFunc {
+func authMiddleWare() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		log.Println("AuthMiddleWare")
+		log.Println("authMiddleWare")
 		authHeader := c.GetHeader("Authorization")
 		username, err := auth.GetUserDetails(authHeader)
 		if err != nil {
