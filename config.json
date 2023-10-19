@@ -2,7 +2,7 @@
   "server": {
     "port": 8200,
     "domain": "localhost",
-    "debug_mode": false
+    "debug_mode": true
   },
   "encryption": {
     "gpg_private_key_file": "INIT_GPG_PRIVATE_KEY",

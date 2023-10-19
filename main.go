@@ -1,9 +1,7 @@
 package main
 
-import (
-	"github.com/arpanrec/secureserver/cmd"
-)
+import "github.com/arpanrec/secureserver/cmd/secureserver"
 
 func main() {
-	cmd.Runner()
+	secureserver.Runner()
 }

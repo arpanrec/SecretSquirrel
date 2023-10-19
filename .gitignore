@@ -56,9 +56,9 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
-/.terraform.lock.hcl
+.terraform.lock.hcl
 data
-/http-client.private.env.json
+http-client.private.env.json
 .vscode/*
 .env
 INIT_GPG_PRIVATE_KEY
@@ -80,4 +80,3 @@ INIT_GPG_PRIVATE_KEY_CONTENT
 INIT_GPG_PRIVATE_KEY_FINGERPRINT
 INIT_OPENSSL_ROOT_CA_CERT_CONTENT
 INIT_OPENSSL_ROOT_CA_KEY_CONTENT
-secureserver
