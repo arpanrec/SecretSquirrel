@@ -9,7 +9,6 @@ import (
 	"encoding/pem"
 	"log"
 	"math/big"
-	"os"
 	"os/exec"
 	"sync"
 	"time"
@@ -38,21 +37,14 @@ func getPkiConfig() serverconfig.PkiConfig {
 		if err := removePassCmd.Run(); err != nil {
 			log.Fatal("Error removing password from CA key: ", err)
 		}
-		caCertBytes, err := os.ReadFile(pkiConfigVar.CaCertFile)
-		if err != nil {
-			log.Fatalln("Error reading ca cert file", err)
-		}
+		caCertBytes := common.ReadFileSureOrStop(pkiConfigVar.CaCertFile)
 		caCertBlock, _ := pem.Decode(caCertBytes)
 		CaCert, errParseCert := x509.ParseCertificate(caCertBlock.Bytes)
 		if errParseCert != nil {
 			log.Fatalln("Error parsing ca cert", errParseCert)
 		}
 		pkiConfigVar.CaCert = CaCert
-		CaPrivateKeyNoPasswordFile := pkiConfigVar.CaPrivateKeyNoPasswordFile
-		caPrivKeyBytes, errReadNpPk := os.ReadFile(CaPrivateKeyNoPasswordFile)
-		if errReadNpPk != nil {
-			log.Fatalln("Error reading ca private key", errReadNpPk)
-		}
+		caPrivKeyBytes := common.ReadFileSureOrStop(pkiConfigVar.CaPrivateKeyNoPasswordFile)
 		caPrivKeyBlock, _ := pem.Decode(caPrivKeyBytes)
 		caPrivKey, errParsePKCS8 := x509.ParsePKCS8PrivateKey(caPrivKeyBlock.Bytes)
 		if errParsePKCS8 != nil {

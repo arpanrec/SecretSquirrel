@@ -21,17 +21,8 @@ func setGPGInfo() serverconfig.EncryptionConfig {
 	mu.Lock()
 	mo.Do(func() {
 		encryptionConfig = serverconfig.GetConfig().Encryption
-		gpgPrivateKey, err := os.ReadFile(encryptionConfig.GPGPrivateKeyFile)
-		if err != nil {
-			log.Fatalln("Error reading private key: ", err)
-		}
-		encryptionConfig.GPGPrivateKey = string(gpgPrivateKey)
-
-		gpgPublicKey, err1 := os.ReadFile(encryptionConfig.GPGPublicKeyFile)
-		if err1 != nil {
-			log.Fatalln("Error reading public key: ", err1)
-		}
-		encryptionConfig.GPGPublicKey = string(gpgPublicKey)
+		encryptionConfig.GPGPrivateKey = common.ReadFileStringSureOrStop(encryptionConfig.GPGPrivateKeyFile)
+		encryptionConfig.GPGPublicKey = common.ReadFileStringSureOrStop(encryptionConfig.GPGPublicKeyFile)
 
 		gpgPassphrase, err2 := os.ReadFile(encryptionConfig.GPGPassphraseFile)
 		if err2 != nil {
