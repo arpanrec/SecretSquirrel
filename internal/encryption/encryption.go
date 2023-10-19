@@ -21,8 +21,8 @@ func setGPGInfo() serverconfig.EncryptionConfig {
 	mu.Lock()
 	mo.Do(func() {
 		encryptionConfig = serverconfig.GetConfig().Encryption
-		encryptionConfig.GPGPrivateKey = common.ReadFileStringSureOrStop(encryptionConfig.GPGPrivateKeyFile)
-		encryptionConfig.GPGPublicKey = common.ReadFileStringSureOrStop(encryptionConfig.GPGPublicKeyFile)
+		encryptionConfig.GPGPrivateKey = common.ReadFileStringSureOrStop(&encryptionConfig.GPGPrivateKeyFile)
+		encryptionConfig.GPGPublicKey = common.ReadFileStringSureOrStop(&encryptionConfig.GPGPublicKeyFile)
 
 		gpgPassphrase, err2 := os.ReadFile(encryptionConfig.GPGPassphraseFile)
 		if err2 != nil {
@@ -33,9 +33,9 @@ func setGPGInfo() serverconfig.EncryptionConfig {
 
 		if encryptionConfig.GPGDeleteKeys {
 			log.Println("Deleting keys")
-			common.DeleteFileSureOrStop(encryptionConfig.GPGPrivateKeyFile)
-			common.DeleteFileSureOrStop(encryptionConfig.GPGPublicKeyFile)
-			common.DeleteFileSureOrStop(encryptionConfig.GPGPassphraseFile)
+			common.DeleteFileSureOrStop(&encryptionConfig.GPGPrivateKeyFile)
+			common.DeleteFileSureOrStop(&encryptionConfig.GPGPublicKeyFile)
+			common.DeleteFileSureOrStop(&encryptionConfig.GPGPassphraseFile)
 		}
 	})
 

@@ -56,6 +56,7 @@ type HostingConfig struct {
 	TlsEnable   bool   `json:"tls_enabled"`
 	TlsCertFile string `json:"tls_cert_file"`
 	TlsKeyFile  string `json:"tls_key_file"`
+	DebugMode   bool   `json:"debug_mode"`
 }
 
 func GetConfig() MasterConfig {

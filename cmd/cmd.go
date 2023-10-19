@@ -11,12 +11,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Runner() {
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	gin.SetMode(gin.DebugMode)
+func ginRunner(serverHosting serverconfig.HostingConfig) {
+	if serverHosting.DebugMode {
+		gin.SetMode(gin.DebugMode)
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	r := gin.New()
 	r.Use(gin.Recovery())
 	r.Use(middleware.JsonLoggerMiddleware())
+	err := r.SetTrustedProxies(nil)
+	if err != nil {
+		log.Fatalln("Error setting trusted proxies: ", err)
+	}
 	apiRouter := r.Group("/api")
 	log.Println("Starting server on port 8080")
 	apiRouterV1 := apiRouter.Group("/v1")
@@ -27,8 +34,6 @@ func Runner() {
 		"/files/*any", routehandlers.FileServerHandler())
 	apiRouterV1.PUT("/pki/*any", routehandlers.PkiHandler())
 
-	serverHosting := serverconfig.GetConfig().Hosting
-
 	if serverHosting.TlsEnable {
 		log.Fatal(r.RunTLS("0.0.0.0"+
 			":"+strconv.Itoa(serverHosting.Port),
@@ -36,4 +41,12 @@ func Runner() {
 			serverHosting.TlsKeyFile))
 	}
 	log.Fatal(r.Run(":" + strconv.Itoa(serverHosting.Port)))
+}
+
+func Runner() {
+
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	serverHosting := serverconfig.GetConfig().Hosting
+	ginRunner(serverHosting)
+
 }

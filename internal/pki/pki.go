@@ -37,14 +37,14 @@ func getPkiConfig() serverconfig.PkiConfig {
 		if err := removePassCmd.Run(); err != nil {
 			log.Fatal("Error removing password from CA key: ", err)
 		}
-		caCertBytes := common.ReadFileSureOrStop(pkiConfigVar.CaCertFile)
+		caCertBytes := common.ReadFileSureOrStop(&pkiConfigVar.CaCertFile)
 		caCertBlock, _ := pem.Decode(caCertBytes)
 		CaCert, errParseCert := x509.ParseCertificate(caCertBlock.Bytes)
 		if errParseCert != nil {
 			log.Fatalln("Error parsing ca cert", errParseCert)
 		}
 		pkiConfigVar.CaCert = CaCert
-		caPrivKeyBytes := common.ReadFileSureOrStop(pkiConfigVar.CaPrivateKeyNoPasswordFile)
+		caPrivKeyBytes := common.ReadFileSureOrStop(&pkiConfigVar.CaPrivateKeyNoPasswordFile)
 		caPrivKeyBlock, _ := pem.Decode(caPrivKeyBytes)
 		caPrivKey, errParsePKCS8 := x509.ParsePKCS8PrivateKey(caPrivKeyBlock.Bytes)
 		if errParsePKCS8 != nil {
@@ -54,10 +54,10 @@ func getPkiConfig() serverconfig.PkiConfig {
 
 		if pkiConfigVar.CaDeleteKeys {
 			log.Println("Deleting CA key files")
-			common.DeleteFileSureOrStop(pkiConfigVar.CaPrivateKeyFile)
-			common.DeleteFileSureOrStop(pkiConfigVar.CaPrivateKeyNoPasswordFile)
-			common.DeleteFileSureOrStop(pkiConfigVar.CaPrivateKeyPasswordFile)
-			common.DeleteFileSureOrStop(pkiConfigVar.CaCertFile)
+			common.DeleteFileSureOrStop(&pkiConfigVar.CaPrivateKeyFile)
+			common.DeleteFileSureOrStop(&pkiConfigVar.CaPrivateKeyNoPasswordFile)
+			common.DeleteFileSureOrStop(&pkiConfigVar.CaPrivateKeyPasswordFile)
+			common.DeleteFileSureOrStop(&pkiConfigVar.CaCertFile)
 		}
 	})
 	mu.Unlock()
