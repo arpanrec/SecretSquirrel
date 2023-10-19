@@ -4,6 +4,7 @@ import (
 	"github.com/arpanrec/secureserver/internal/pki"
 	"github.com/gin-gonic/gin"
 	"io"
+	"net/http"
 )
 
 func PkiHandler() gin.HandlerFunc {
@@ -24,6 +25,6 @@ func PkiHandler() gin.HandlerFunc {
 			})
 			return
 		}
-		c.JSON(201, r)
+		c.Data(http.StatusCreated, "application/json", []byte(r))
 	}
 }
