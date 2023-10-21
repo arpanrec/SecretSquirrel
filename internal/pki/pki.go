@@ -158,34 +158,34 @@ func getClientCert(dnsNames []string) (string, string, error) {
 	return cetCert(dnsNames, []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth}, false)
 }
 
-func GetCert(locationPath *string, body *[]byte) (string, error) {
+func GetCert(locationPath *string, body *[]byte) (*[]byte, error) {
 	pkiRequestJson := pkiRequest{}
 	pkiResponseJson := pkiResponse{}
 
 	err := json.Unmarshal(*body, &pkiRequestJson)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	if strings.HasSuffix(*locationPath, "clientcert") {
 		cert, k, e := getClientCert(pkiRequestJson.DnsNames)
 		if e != nil {
-			return "", e
+			return nil, e
 		}
 		pkiResponseJson.Cert = cert
 		pkiResponseJson.Key = k
 	} else if strings.HasSuffix(*locationPath, "servercert") {
 		cert, k, e := getServerCert(pkiRequestJson.DnsNames)
 		if e != nil {
-			return "", e
+			return nil, e
 		}
 		pkiResponseJson.Cert = cert
 		pkiResponseJson.Key = k
 	} else {
-		return "", errors.New("invalid path for pki: " + *locationPath)
+		return nil, errors.New("invalid path for pki: " + *locationPath)
 	}
 	pkiResponseJsonBytes, err := json.Marshal(pkiResponseJson)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return string(pkiResponseJsonBytes), nil
+	return &pkiResponseJsonBytes, nil
 }
