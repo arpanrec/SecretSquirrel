@@ -25,6 +25,6 @@ func pkiHandler() gin.HandlerFunc {
 			})
 			return
 		}
-		c.Data(http.StatusCreated, "application/json", []byte(r))
+		c.Data(http.StatusCreated, "application/json", *r)
 	}
 }
