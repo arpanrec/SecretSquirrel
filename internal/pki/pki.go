@@ -90,7 +90,7 @@ func generateSerialNumber() (*big.Int, error) {
 	return certSerialNumber, nil
 }
 
-func cetCert(dnsAltNames []string, extKeyUsage []x509.ExtKeyUsage, isCA bool) (string, string, error) {
+func getCert(dnsAltNames []string, extKeyUsage []x509.ExtKeyUsage, isCA bool) (string, string, error) {
 	pkiCurrentConfig := getPkiConfig()
 	certPrivKey, err := rsa.GenerateKey(rand.Reader, 4096)
 	if err != nil {
@@ -149,39 +149,45 @@ func cetCert(dnsAltNames []string, extKeyUsage []x509.ExtKeyUsage, isCA bool) (s
 }
 
 func getServerCert(dnsNames []string) (string, string, error) {
-	return cetCert(dnsNames,
+	return getCert(dnsNames,
 		[]x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
 		false)
 }
 
 func getClientCert(dnsNames []string) (string, string, error) {
-	return cetCert(dnsNames, []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth}, false)
+	return getCert(dnsNames, []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth}, false)
 }
 
 func GetCert(locationPath *string, body *[]byte) (*[]byte, error) {
 	pkiRequestJson := pkiRequest{}
 	pkiResponseJson := pkiResponse{}
-
-	err := json.Unmarshal(*body, &pkiRequestJson)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasSuffix(*locationPath, "clientcert") {
-		cert, k, e := getClientCert(pkiRequestJson.DnsNames)
-		if e != nil {
-			return nil, e
-		}
-		pkiResponseJson.Cert = cert
-		pkiResponseJson.Key = k
-	} else if strings.HasSuffix(*locationPath, "servercert") {
-		cert, k, e := getServerCert(pkiRequestJson.DnsNames)
-		if e != nil {
-			return nil, e
-		}
-		pkiResponseJson.Cert = cert
-		pkiResponseJson.Key = k
+	if strings.HasSuffix(*locationPath, "cacert") {
+		pemCert := pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: getPkiConfig().CaCert.Raw})
+		pkiResponseJson.Cert = string(pemCert)
+		bytesPkiCaPrivDecode := pem.EncodeToMemory(&pem.Block{Type: "RSA PRIVATE KEY", Bytes: x509.MarshalPKCS1PrivateKey(getPkiConfig().CaPrivateNoPasswordKey)})
+		pkiResponseJson.Key = string(bytesPkiCaPrivDecode)
 	} else {
-		return nil, errors.New("invalid path for pki: " + *locationPath)
+		err := json.Unmarshal(*body, &pkiRequestJson)
+		if err != nil {
+			return nil, err
+		}
+		if strings.HasSuffix(*locationPath, "clientcert") {
+			cert, k, e := getClientCert(pkiRequestJson.DnsNames)
+			if e != nil {
+				return nil, e
+			}
+			pkiResponseJson.Cert = cert
+			pkiResponseJson.Key = k
+		} else if strings.HasSuffix(*locationPath, "servercert") {
+			cert, k, e := getServerCert(pkiRequestJson.DnsNames)
+			if e != nil {
+				return nil, e
+			}
+			pkiResponseJson.Cert = cert
+			pkiResponseJson.Key = k
+		} else {
+			return nil, errors.New("invalid path for pki: " + *locationPath)
+		}
 	}
 	pkiResponseJsonBytes, err := json.Marshal(pkiResponseJson)
 	if err != nil {
