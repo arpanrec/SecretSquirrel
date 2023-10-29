@@ -205,10 +205,10 @@ sudo useradd -m -s /bin/bash actions-runner
 echo "actions-runner ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/010-actions-runner >/dev/null
 sudo su - actions-runner
 cd ~
-curl -o actions-runner-linux-x64-2.310.2.tar.gz \
-  -L https://github.com/actions/runner/releases/download/v2.310.2/actions-runner-linux-x64-2.310.2.tar.gz
-echo "fb28a1c3715e0a6c5051af0e6eeff9c255009e2eec6fb08bc2708277fbb49f93  actions-runner-linux-x64-2.310.2.tar.gz" | shasum -a 256 -c
-tar xzf ./actions-runner-linux-x64-2.310.2.tar.gz
+curl -o actions-runner-linux-x64-2.311.0.tar.gz \
+  -L https://github.com/actions/runner/releases/download/v2.311.0/actions-runner-linux-x64-2.311.0.tar.gz
+echo "29fc8cf2dab4c195bb147384e7e2c94cfd4d4022c793b346a6175435265aa278  actions-runner-linux-x64-2.311.0.tar.gz" | shasum -a 256 -c
+tar xzf ./actions-runner-linux-x64-2.311.0.tar.gz
 ./config.sh --url https://github.com/arpanrec/secureserver --token "${TOKEN}" --name secureserver --work _work --labels secureserver --unattended
 sudo ./svc.sh install
 sudo ./svc.sh start
