@@ -65,7 +65,7 @@ sudo docker run --rm \
     --non-interactive \
     --agree-tos \
     --email "${INIT_EMAIL_ID}" \
-    --domains 172-105-38-210.ip.linodeusercontent.com \
+    --domains 170-187-232-213.ip.linodeusercontent.com \
     --preferred-challenges http-01 >/dev/null
 
 sudo chmod 755 -R /etc/letsencrypt/live /etc/letsencrypt/archive /etc/letsencrypt/renewal
