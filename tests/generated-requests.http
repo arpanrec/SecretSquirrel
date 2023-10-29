@@ -24,3 +24,8 @@ Content-Type: application/json
     "test1.com"
   ]
 }
+
+###
+PUT {{endpoint}}/api/v1/pki/cacert
+Authorization: Basic {{username}} {{password}}
+Content-Type: application/json
