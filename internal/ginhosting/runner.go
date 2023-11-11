@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/arpanrec/secureserver/internal/appconfig"
+	"github.com/arpanrec/secretsquirrel/internal/appconfig"
 	"github.com/gin-gonic/gin"
 )
 

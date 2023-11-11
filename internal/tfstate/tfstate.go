@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/arpanrec/secureserver/internal/storage"
+	"github.com/arpanrec/secretsquirrel/internal/storage"
 )
 
 func TerraformStateHandler(b string, m string, p string, q map[string][]string) (int, string) {

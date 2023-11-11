@@ -11,7 +11,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/arpanrec/secureserver/internal/appconfig"
+	"github.com/arpanrec/secretsquirrel/internal/appconfig"
 )
 
 var (

@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/arpanrec/secureserver/internal/storage"
+	"github.com/arpanrec/secretsquirrel/internal/storage"
 )
 
 func ReadWriteFilesFromURL(b string, m string, filePath string) (int, string) {

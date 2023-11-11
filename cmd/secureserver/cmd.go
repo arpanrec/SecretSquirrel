@@ -1,8 +1,8 @@
 package secureserver
 
 import (
-	"github.com/arpanrec/secureserver/internal/appconfig"
-	"github.com/arpanrec/secureserver/internal/ginhosting"
+	"github.com/arpanrec/secretsquirrel/internal/appconfig"
+	"github.com/arpanrec/secretsquirrel/internal/ginhosting"
 	"log"
 )
 

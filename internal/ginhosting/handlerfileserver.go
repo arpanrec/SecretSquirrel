@@ -1,7 +1,7 @@
 package ginhosting
 
 import (
-	"github.com/arpanrec/secureserver/internal/fileserver"
+	"github.com/arpanrec/secretsquirrel/internal/fileserver"
 	"github.com/gin-gonic/gin"
 	"io"
 )

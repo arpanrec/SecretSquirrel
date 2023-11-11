@@ -4,9 +4,9 @@ import (
 	"log"
 	"sync"
 
-	"github.com/arpanrec/secureserver/internal/appconfig"
-	"github.com/arpanrec/secureserver/internal/encryption"
-	"github.com/arpanrec/secureserver/internal/physical"
+	"github.com/arpanrec/secretsquirrel/internal/appconfig"
+	"github.com/arpanrec/secretsquirrel/internal/encryption"
+	"github.com/arpanrec/secretsquirrel/internal/physical"
 )
 
 var pStorage physical.Storage

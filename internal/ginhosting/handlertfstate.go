@@ -1,7 +1,7 @@
 package ginhosting
 
 import (
-	"github.com/arpanrec/secureserver/internal/tfstate"
+	"github.com/arpanrec/secretsquirrel/internal/tfstate"
 	"github.com/gin-gonic/gin"
 	"io"
 	"log"

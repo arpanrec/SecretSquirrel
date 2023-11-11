@@ -6,8 +6,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/arpanrec/secureserver/internal/appconfig"
-	"github.com/arpanrec/secureserver/internal/common"
+	"github.com/arpanrec/secretsquirrel/internal/appconfig"
+	"github.com/arpanrec/secretsquirrel/internal/common"
 
 	"github.com/ProtonMail/gopenpgp/v2/helper"
 )

@@ -1,4 +1,4 @@
-module github.com/arpanrec/secureserver
+module github.com/arpanrec/secretsquirrel
 
 go 1.20
 

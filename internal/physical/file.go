@@ -1,7 +1,7 @@
 package physical
 
 import (
-	"github.com/arpanrec/secureserver/internal/appconfig"
+	"github.com/arpanrec/secretsquirrel/internal/appconfig"
 	"log"
 	"os"
 	"path"

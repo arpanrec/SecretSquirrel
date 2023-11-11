@@ -16,8 +16,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/arpanrec/secureserver/internal/appconfig"
-	"github.com/arpanrec/secureserver/internal/common"
+	"github.com/arpanrec/secretsquirrel/internal/appconfig"
+	"github.com/arpanrec/secretsquirrel/internal/common"
 )
 
 var (

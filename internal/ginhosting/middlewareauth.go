@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/arpanrec/secureserver/internal/auth"
+	"github.com/arpanrec/secretsquirrel/internal/auth"
 	"github.com/gin-gonic/gin"
 )
 
