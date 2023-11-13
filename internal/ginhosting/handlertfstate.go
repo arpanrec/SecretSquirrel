@@ -1,10 +1,11 @@
 package ginhosting
 
 import (
-	"github.com/arpanrec/secretsquirrel/internal/tfstate"
-	"github.com/gin-gonic/gin"
 	"io"
 	"log"
+
+	"github.com/arpanrec/secretsquirrel/internal/tfstate"
+	"github.com/gin-gonic/gin"
 )
 
 func tfStateHandler() gin.HandlerFunc {

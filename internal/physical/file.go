@@ -1,12 +1,13 @@
 package physical
 
 import (
-	"github.com/arpanrec/secretsquirrel/internal/appconfig"
 	"log"
 	"os"
 	"path"
 	"path/filepath"
 	"sync"
+
+	"github.com/arpanrec/secretsquirrel/internal/appconfig"
 )
 
 var mutexPhysicalFile = &sync.Mutex{}

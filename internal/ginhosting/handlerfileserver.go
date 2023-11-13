@@ -1,9 +1,10 @@
 package ginhosting
 
 import (
+	"io"
+
 	"github.com/arpanrec/secretsquirrel/internal/fileserver"
 	"github.com/gin-gonic/gin"
-	"io"
 )
 
 func fileServerHandler() gin.HandlerFunc {

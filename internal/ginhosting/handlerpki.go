@@ -1,10 +1,11 @@
 package ginhosting
 
 import (
-	"github.com/arpanrec/secretsquirrel/internal/pki"
-	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
+
+	"github.com/arpanrec/secretsquirrel/internal/pki"
+	"github.com/gin-gonic/gin"
 )
 
 func pkiHandler() gin.HandlerFunc {
