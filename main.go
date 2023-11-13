@@ -1,7 +1,7 @@
 package main
 
-import "github.com/arpanrec/secretsquirrel/cmd/secureserver"
+import "github.com/arpanrec/secretsquirrel/cmd/secretsquirrel"
 
 func main() {
-	secureserver.Runner()
+	secretsquirrel.Runner()
 }

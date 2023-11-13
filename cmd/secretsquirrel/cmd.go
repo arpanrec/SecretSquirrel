@@ -1,4 +1,4 @@
-package secureserver
+package secretsquirrel
 
 import (
 	"log"
