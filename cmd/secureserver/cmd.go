@@ -1,9 +1,10 @@
 package secureserver
 
 import (
+	"log"
+
 	"github.com/arpanrec/secretsquirrel/internal/appconfig"
 	"github.com/arpanrec/secretsquirrel/internal/ginhosting"
-	"log"
 )
 
 func Runner() {
