@@ -84,3 +84,4 @@ INIT_OPENSSL_ROOT_CA_KEY_CONTENT
 .gradle/
 build/
 HELP.md
+secretsquirrel.iml
