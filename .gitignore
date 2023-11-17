@@ -85,3 +85,4 @@ INIT_OPENSSL_ROOT_CA_KEY_CONTENT
 build/
 HELP.md
 secretsquirrel.iml
+/target/*
