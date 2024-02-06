@@ -42,6 +42,7 @@ func Get(key *string, version *int) (*KVData, error) {
 	}
 	err = encryption.DecryptMessage(&d.Value)
 	if err != nil {
+		log.Println("Error while decrypting message: ", err)
 		return nil, err
 	}
 	return d, nil
@@ -52,6 +53,7 @@ func Save(key *string, keyValue *KVData) error {
 	s := getStorage()
 	err := encryption.EncryptMessage(&keyValue.Value)
 	if err != nil {
+		log.Println("Error while encrypting message: ", err)
 		return err
 	}
 	return (*s).Save(key, keyValue)
@@ -61,6 +63,7 @@ func Update(key *string, keyValue *KVData, version *int) error {
 	s := getStorage()
 	err := encryption.EncryptMessage(&keyValue.Value)
 	if err != nil {
+		log.Println("Error while encrypting message: ", err)
 		return err
 	}
 	return (*s).Update(key, keyValue, version)
