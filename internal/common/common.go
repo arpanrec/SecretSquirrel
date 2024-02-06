@@ -21,3 +21,17 @@ func ReadFileSureOrStop(l *string) []byte {
 func ReadFileStringSureOrStop(l *string) string {
 	return string(ReadFileSureOrStop(l))
 }
+
+func DeleteFileSureOrStop(l *string) {
+	log.Println("Deleting file: ", *l)
+	_, err := os.Stat(*l)
+	if os.IsNotExist(err) {
+		log.Println("File does not exist: ", *l)
+	} else {
+		log.Println("Deleting file: ", *l)
+		errRemove := os.Remove(*l)
+		if errRemove != nil {
+			log.Fatalln("Error deleting file: ", errRemove)
+		}
+	}
+}

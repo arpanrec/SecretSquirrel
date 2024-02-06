@@ -9,7 +9,7 @@ import (
 	"sync"
 )
 
-var masterServerConfig ApplicationMasterConfig
+var masterServerConfig *ApplicationMasterConfig
 
 var mo = &sync.Once{}
 var mu = &sync.Mutex{}
@@ -59,7 +59,7 @@ type ApplicationMasterConfig struct {
 	ServerConfig ApplicationServerConfig     `json:"server"`
 }
 
-func GetConfig() ApplicationMasterConfig {
+func GetConfig() *ApplicationMasterConfig {
 	mu.Lock()
 	mo.Do(func() {
 		log.Printf("Setting config from %v", "config.json")
@@ -72,11 +72,11 @@ func GetConfig() ApplicationMasterConfig {
 			log.Fatalln("Error reading config file", er)
 		}
 		log.Println("Config file read successfully : \n", string(configJson))
-		err := json.Unmarshal(configJson, &masterServerConfig)
+		err := json.Unmarshal(configJson, masterServerConfig)
 		if err != nil {
 			log.Fatalln("Error Unmarshal config file ", err)
 		}
-		log.Printf("Config set successfully %v\n", masterServerConfig)
+		log.Printf("Config set successfully %v\n", *masterServerConfig)
 	})
 	mu.Unlock()
 	return masterServerConfig
