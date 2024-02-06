@@ -7,9 +7,11 @@ import (
 	"github.com/arpanrec/secretsquirrel/internal/appconfig"
 )
 
-var KeyValuePersistence KeyValueStorage
+var KeyValuePersistence *KeyValueStorage
 
 var once = &sync.Once{}
+
+const InternalStoragePath string = "internal"
 
 func getStorage() *KeyValueStorage {
 	once.Do(func() {
@@ -18,14 +20,15 @@ func getStorage() *KeyValueStorage {
 		log.Print("Storage type set to ", storageType)
 		switch storageType {
 		case "file":
-			KeyValuePersistence = FileStorageConfig{
+			var filePersistence KeyValueStorage = FileStorageConfig{
 				Path: storageConfig.Config["path"].(string),
 			}
+			KeyValuePersistence = &filePersistence
 		default:
-			log.Println("Error Invalid storage type ", storageType)
+			log.Fatalln("Error Invalid storage type ", storageType)
 		}
 	})
-	return &KeyValuePersistence
+	return KeyValuePersistence
 }
 
 func Get(key *string, version *int) (*KVData, error) {

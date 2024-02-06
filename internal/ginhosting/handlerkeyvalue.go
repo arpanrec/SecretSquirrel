@@ -1,7 +1,7 @@
 package ginhosting
 
 import (
-	"github.com/arpanrec/secretsquirrel/internal/keyvalue"
+	"github.com/arpanrec/secretsquirrel/internal/api"
 	"github.com/gin-gonic/gin"
 	"io"
 )
@@ -16,8 +16,8 @@ func keyValueHandler() gin.HandlerFunc {
 			return
 		}
 		rMethod := c.Request.Method
-		var key = c.Request.URL.Path[7:]
-		kvData, err := keyvalue.ReadWriteFilesFromURL(&body, rMethod, &key)
+		key := c.Request.URL.Path[7:]
+		kvData, err := api.KeyValue(&body, &rMethod, &key)
 		if err != nil {
 			c.JSON(500, gin.H{
 				"error": err.Error(),

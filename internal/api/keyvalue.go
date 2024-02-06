@@ -1,4 +1,4 @@
-package keyvalue
+package api
 
 import (
 	"encoding/json"
@@ -8,9 +8,9 @@ import (
 	"net/http"
 )
 
-func ReadWriteFilesFromURL(data *[]byte, operation string, key *string) (*physical.KVData, error) {
+func KeyValue(data *[]byte, operation *string, key *string) (*physical.KVData, error) {
 
-	switch operation {
+	switch *operation {
 
 	case http.MethodGet:
 		log.Println("http.MethodGet for KeyValue called " + *key)
@@ -28,7 +28,7 @@ func ReadWriteFilesFromURL(data *[]byte, operation string, key *string) (*physic
 			return nil, errUnmarshal
 		}
 		var saveUpdateErr error
-		if operation == http.MethodPut {
+		if *operation == http.MethodPut {
 			saveUpdateErr = physical.Update(key, &kvData, nil)
 		} else {
 			saveUpdateErr = physical.Save(key, &kvData)
