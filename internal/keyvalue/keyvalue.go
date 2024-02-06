@@ -20,16 +20,21 @@ func ReadWriteFilesFromURL(data *[]byte, operation string, key *string) (*physic
 			return nil, err
 		}
 		return d, nil
-	case http.MethodPost:
+	case http.MethodPut, http.MethodPost:
 		var kvData physical.KVData
 		errUnmarshal := json.Unmarshal(*data, &kvData)
 		if errUnmarshal != nil {
 			log.Println("Error while unmarshalling data from request: ", errUnmarshal)
 			return nil, errUnmarshal
 		}
-		err := physical.Save(key, &kvData)
-		if err != nil {
-			return nil, err
+		var saveUpdateErr error
+		if operation == http.MethodPut {
+			saveUpdateErr = physical.Update(key, &kvData, nil)
+		} else {
+			saveUpdateErr = physical.Save(key, &kvData)
+		}
+		if saveUpdateErr != nil {
+			return nil, saveUpdateErr
 		}
 		return nil, nil
 	default:
