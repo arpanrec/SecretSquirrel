@@ -222,7 +222,7 @@ func (fs FileStorageConfig) Delete(key *string, version *int) error {
 			return err
 		}
 		if latestVersion == 0 {
-			return errors.New("version does not exist")
+			return errors.New("no version exists to delete for key: " + *key)
 		}
 		version = &latestVersion
 	}
