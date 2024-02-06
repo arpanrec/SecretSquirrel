@@ -5,33 +5,23 @@ import (
 	"os"
 )
 
-func ReadFileSureOrStop(l *string) []byte {
-	log.Println("Reading file: ", *l)
-	_, err := os.Stat(*l)
-	if os.IsNotExist(err) {
-		log.Fatalln("File does not exist: ", *l)
-	}
-	b, err := os.ReadFile(*l)
+func IfFileExistsReplaceStringVal(l *string) error {
+	log.Println("StringOrFile : ", *l)
+	fileInfo, err := os.Stat(*l)
 	if err != nil {
-		log.Fatalln("Error reading file: ", err)
-	}
-	return b
-}
-
-func ReadFileStringSureOrStop(l *string) string {
-	return string(ReadFileSureOrStop(l))
-}
-
-func DeleteFileSureOrStop(l *string) {
-	log.Println("Deleting file: ", *l)
-	_, err := os.Stat(*l)
-	if os.IsNotExist(err) {
-		log.Println("File does not exist: ", *l)
-	} else {
-		log.Println("Deleting file: ", *l)
-		errRemove := os.Remove(*l)
-		if errRemove != nil {
-			log.Fatalln("Error deleting file: ", errRemove)
+		if os.IsNotExist(err) {
+			return nil
+		} else {
+			return err
 		}
 	}
+	if fileInfo.IsDir() {
+		return nil
+	}
+	data, err := os.ReadFile(*l)
+	if err != nil {
+		return err
+	}
+	*l = string(data)
+	return nil
 }
