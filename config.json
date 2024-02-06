@@ -5,25 +5,14 @@
         "debug_mode": true
     },
     "encryption": {
-        "gpg_private_key_file": "INIT_GPG_PRIVATE_KEY",
-        "gpg_public_key_file": "INIT_GPG_PRIVATE_KEY",
-        "gpg_private_key_password_file": "INIT_GPG_PRIVATE_KEY_PASSWORD",
-        "pgp_delete_key_files_after_startup": false
+        "gpg_private_key": "-----BEGIN PGP PRIVATE KEY BLOCK-----\n\nlIYEZa70ABYJKwYBBAHaRw8BAQdAqc7Zfp6aQyefH7FWJOHWGyKSwIZe2L9e+pVm\numnaeIz+BwMCdNs9UHB91Gn/sq1FqE2sz9/ZguQjtGCOsmqjAUr5WJqGB2NE9RR4\n2GgMEWy5UzDZzcO5ckHEZVuqE0HbAH/X2Farkr6ZBIDDWeLNs2CqBbQsbWluZXJ2\nYS10ZXN0IDxtaW5lcnZhLXRlc3RAbWluZXJ2YS10ZXN0LmNvbT6ImQQTFgoAQRYh\nBH+1ftYl3tbRZvGFj+tj9wE9kLoABQJlrvQAAhsDBQkFo5qABQsJCAcCAiICBhUK\nCQgLAgQWAgMBAh4HAheAAAoJEOtj9wE9kLoA/Q4BAKdZAmAQMd1Ei6Aw5EIEuj2L\nuBOdM2BXei/2feH7Iw+aAP0c3b2b2jQ4hBsPIUKoTiPBtTRQMHr9pfZ2BeDAXTFq\nAJyLBGWu9AASCisGAQQBl1UBBQEBB0B6aiWarLiQWrmIS0VnIQQvB/vc5jsNxYUr\nk0i/TELPXwMBCAf+BwMCizbuwMKSJ0n/reXH0dlE03diLm6k8irQt4aoEf5Fr3GO\nuxzWPcrRJJqtwC/I5f4UplVmF3tz5/t2xahIr6nED8kzdk21qQSY5jmnIunMMIh+\nBBgWCgAmFiEEf7V+1iXe1tFm8YWP62P3AT2QugAFAmWu9AACGwwFCQWjmoAACgkQ\n62P3AT2QugCfHgD+KjrWed+V/PcHoqtyeXPbFfY6KXLugSbV614ZNt1t34YA/3wG\n1tw2qmtpjSy2EpCx9Om+vrY6TsbHdv2j2vOEd4QM\n=SQ4t\n-----END PGP PRIVATE KEY BLOCK-----\n",
+        "gpg_public_key": "-----BEGIN PGP PUBLIC KEY BLOCK-----\n\nmDMEZa70ABYJKwYBBAHaRw8BAQdAqc7Zfp6aQyefH7FWJOHWGyKSwIZe2L9e+pVm\numnaeIy0LG1pbmVydmEtdGVzdCA8bWluZXJ2YS10ZXN0QG1pbmVydmEtdGVzdC5j\nb20+iJkEExYKAEEWIQR/tX7WJd7W0WbxhY/rY/cBPZC6AAUCZa70AAIbAwUJBaOa\ngAULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgAAKCRDrY/cBPZC6AP0OAQCnWQJg\nEDHdRIugMORCBLo9i7gTnTNgV3ov9n3h+yMPmgD9HN29m9o0OIQbDyFCqE4jwbU0\nUDB6/aX2dgXgwF0xagC4OARlrvQAEgorBgEEAZdVAQUBAQdAemolmqy4kFq5iEtF\nZyEELwf73OY7DcWFK5NIv0xCz18DAQgHiH4EGBYKACYWIQR/tX7WJd7W0WbxhY/r\nY/cBPZC6AAUCZa70AAIbDAUJBaOagAAKCRDrY/cBPZC6AJ8eAP4qOtZ535X89wei\nq3J5c9sV9jopcu6BJtXrXhk23W3fhgD/fAbW3Daqa2mNLLYSkLH06b6+tjpOxsd2\n/aPa84R3hAw=\n=kgso\n-----END PGP PUBLIC KEY BLOCK-----\n",
+        "gpg_private_key_password": "password"
     },
     "storage": {
         "type": "file",
         "config": {
             "path": "data"
         }
-    },
-    "users": {
-        "arpanrec": null
-    },
-    "pki": {
-        "openssl_root_ca_key_file": "INIT_OPENSSL_ROOT_CA_KEY",
-        "openssl_root_ca_cert_file": "INIT_OPENSSL_ROOT_CA_CERT",
-        "openssl_root_ca_key_password_file": "INIT_OPENSSL_ROOT_CA_KEY_PASSWORD",
-        "openssl_root_ca_no_password_key_file": "INIT_OPENSSL_ROOT_CA_NO_PASSWORD_KEY",
-        "openssl_delete_key_files_after_startup": false
     }
 }

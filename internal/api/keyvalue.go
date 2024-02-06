@@ -37,6 +37,14 @@ func KeyValue(data *[]byte, operation *string, key *string) (*physical.KVData, e
 			return nil, saveUpdateErr
 		}
 		return nil, nil
+	case http.MethodDelete:
+		log.Println("http.MethodDelete for KeyValue called " + *key)
+		err := physical.Delete(key, nil)
+		if err != nil {
+			log.Println("Error while deleting data: ", err)
+			return nil, err
+		}
+		return nil, nil
 	default:
 		return nil, errors.New("unsupported Method")
 	}
