@@ -11,39 +11,15 @@ import (
 	"strconv"
 	"strings"
 	"sync"
-
-	"github.com/arpanrec/secretsquirrel/internal/appconfig"
 )
 
 var mutexPhysicalFile = &sync.Mutex{}
-
-var oncePhysicalFile = &sync.Once{}
 
 type FileStorageConfig struct {
 	Path string `json:"path"`
 }
 
 const kvDataJsonFileName string = "kvdata.json"
-
-var fileStorageConfigVar FileStorageConfig
-
-func getFileStorageConfigVar() FileStorageConfig {
-	oncePhysicalFile.Do(func() {
-		storagePath := appconfig.GetConfig().Storage.Config["path"].(string)
-		if storagePath == "" {
-			log.Fatalln("Fatal Storage path not set")
-		}
-		absolutePath, err := filepath.Abs(storagePath)
-		if err != nil {
-			log.Fatalln("Fatal Storage path not valid", err)
-		}
-		fileStorageConfigVar = FileStorageConfig{
-			Path: absolutePath,
-		}
-		log.Printf("File storage path set to %v", fileStorageConfigVar)
-	})
-	return fileStorageConfigVar
-}
 
 func keyToLowerCase(key *string) {
 	strings.ToLower(*key)
@@ -54,7 +30,7 @@ func (fs FileStorageConfig) ListKeys(key *string) ([]string, error) {
 	defer mutexPhysicalFile.Unlock()
 	keyToLowerCase(key)
 	keys := make([]string, 0)
-	rootKeyPath := path.Join(getFileStorageConfigVar().Path, *key)
+	rootKeyPath := path.Join((*(KeyValuePersistence.(*FileStorageConfig))).Path, *key)
 	files, err := os.ReadDir(rootKeyPath)
 	if err != nil {
 		log.Println("Error while reading dir", err)
@@ -72,7 +48,7 @@ func (fs FileStorageConfig) ListVersions(key *string) ([]int, error) {
 	mutexPhysicalFile.Lock()
 	defer mutexPhysicalFile.Unlock()
 	keyToLowerCase(key)
-	keyPath := path.Join(getFileStorageConfigVar().Path, *key)
+	keyPath := path.Join((*(KeyValuePersistence.(*FileStorageConfig))).Path, *key)
 	versions := make([]int, 0)
 	dirInfo, err := os.Stat(keyPath)
 	if err != nil {
@@ -107,7 +83,7 @@ func (fs FileStorageConfig) ListVersions(key *string) ([]int, error) {
 }
 
 func (fs FileStorageConfig) GetLatestVersion(key *string) (int, error) {
-	var allVersions, err = getFileStorageConfigVar().ListVersions(key)
+	var allVersions, err = (*(KeyValuePersistence.(*FileStorageConfig))).ListVersions(key)
 	if err != nil {
 		log.Println("Error while getting latest version for key", *key, err)
 		return 0, err
@@ -119,7 +95,7 @@ func (fs FileStorageConfig) GetLatestVersion(key *string) (int, error) {
 }
 
 func (fs FileStorageConfig) GetNextVersion(key *string) (int, error) {
-	var allVersions, err = getFileStorageConfigVar().ListVersions(key)
+	var allVersions, err = (*(KeyValuePersistence.(*FileStorageConfig))).ListVersions(key)
 	if err != nil {
 		return 0, err
 	}
@@ -132,7 +108,7 @@ func (fs FileStorageConfig) GetNextVersion(key *string) (int, error) {
 func (fs FileStorageConfig) Get(key *string, version *int) (*KVData, error) {
 	keyToLowerCase(key)
 	if version == nil {
-		nextVersion, err := getFileStorageConfigVar().GetLatestVersion(key)
+		nextVersion, err := (*(KeyValuePersistence.(*FileStorageConfig))).GetLatestVersion(key)
 		if err != nil {
 			return nil, err
 		}
@@ -143,7 +119,7 @@ func (fs FileStorageConfig) Get(key *string, version *int) (*KVData, error) {
 		}
 	}
 	log.Println("Getting key: ", *key, ", version:", *version)
-	fullPath := path.Join(getFileStorageConfigVar().Path, *key, strconv.Itoa(*version), kvDataJsonFileName)
+	fullPath := path.Join((*(KeyValuePersistence.(*FileStorageConfig))).Path, *key, strconv.Itoa(*version), kvDataJsonFileName)
 	mutexPhysicalFile.Lock()
 	defer mutexPhysicalFile.Unlock()
 	d, err := os.ReadFile(fullPath)
@@ -159,7 +135,7 @@ func (fs FileStorageConfig) Get(key *string, version *int) (*KVData, error) {
 }
 
 func (fs FileStorageConfig) Save(key *string, keyValue *KVData) error {
-	latestVersion, err := getFileStorageConfigVar().GetLatestVersion(key)
+	latestVersion, err := (*(KeyValuePersistence.(*FileStorageConfig))).GetLatestVersion(key)
 	if err != nil {
 		log.Println("Error while getting latest version while saving key", *key, err)
 		return err
@@ -167,36 +143,36 @@ func (fs FileStorageConfig) Save(key *string, keyValue *KVData) error {
 	if latestVersion > 0 {
 		return errors.New("version already exists, use Update")
 	}
-	return getFileStorageConfigVar().saveOrUpdate(key, keyValue, nil)
+	return (*(KeyValuePersistence.(*FileStorageConfig))).saveOrUpdate(key, keyValue, nil)
 }
 
 func (fs FileStorageConfig) Update(key *string, keyValue *KVData, version *int) error {
-	latestVersion, err := getFileStorageConfigVar().GetLatestVersion(key)
+	latestVersion, err := (*(KeyValuePersistence.(*FileStorageConfig))).GetLatestVersion(key)
 	if err != nil {
 		return err
 	}
 	if latestVersion == 0 {
 		return errors.New("version does not exist, use Save")
 	}
-	return getFileStorageConfigVar().saveOrUpdate(key, keyValue, version)
+	return (*(KeyValuePersistence.(*FileStorageConfig))).saveOrUpdate(key, keyValue, version)
 }
 
 func (fs FileStorageConfig) saveOrUpdate(key *string, keyValue *KVData, version *int) error {
 	log.Println("Save or Update called" + *key + " " + keyValue.Value)
 	keyToLowerCase(key)
 	if version == nil {
-		nextVersion, err := getFileStorageConfigVar().GetNextVersion(key)
+		nextVersion, err := (*(KeyValuePersistence.(*FileStorageConfig))).GetNextVersion(key)
 		if err != nil {
 			log.Println("Error while getting next version while save or update key", *key, err)
 			return err
 		}
 		version = &nextVersion
 	}
-	kvDataFilePath := path.Join(getFileStorageConfigVar().Path, *key, strconv.Itoa(*version), kvDataJsonFileName)
+	kvDataFilePath := path.Join((*(KeyValuePersistence.(*FileStorageConfig))).Path, *key, strconv.Itoa(*version), kvDataJsonFileName)
 	keyVersionDirPath := filepath.Dir(kvDataFilePath)
 	mutexPhysicalFile.Lock()
 	defer mutexPhysicalFile.Unlock()
-	errMakeDir := os.MkdirAll(keyVersionDirPath, 0755)
+	errMakeDir := os.MkdirAll(keyVersionDirPath, os.FileMode(0700))
 	if errMakeDir != nil {
 		log.Println("Error while creating dir", keyVersionDirPath, errMakeDir)
 		return errMakeDir
@@ -207,7 +183,7 @@ func (fs FileStorageConfig) saveOrUpdate(key *string, keyValue *KVData, version 
 	if errMarshal != nil {
 		return errMarshal
 	}
-	errWriteFile := os.WriteFile(kvDataFilePath, d, 0644)
+	errWriteFile := os.WriteFile(kvDataFilePath, d, os.FileMode(0700))
 	if errWriteFile != nil {
 		return errWriteFile
 	}
@@ -217,7 +193,7 @@ func (fs FileStorageConfig) saveOrUpdate(key *string, keyValue *KVData, version 
 func (fs FileStorageConfig) Delete(key *string, version *int) error {
 	keyToLowerCase(key)
 	if version == nil {
-		latestVersion, err := getFileStorageConfigVar().GetLatestVersion(key)
+		latestVersion, err := (*(KeyValuePersistence.(*FileStorageConfig))).GetLatestVersion(key)
 		if err != nil {
 			return err
 		}
@@ -226,7 +202,7 @@ func (fs FileStorageConfig) Delete(key *string, version *int) error {
 		}
 		version = &latestVersion
 	}
-	p := path.Join(getFileStorageConfigVar().Path, *key, strconv.Itoa(*version))
+	p := path.Join((*(KeyValuePersistence.(*FileStorageConfig))).Path, *key, strconv.Itoa(*version))
 	mutexPhysicalFile.Lock()
 	defer mutexPhysicalFile.Unlock()
 	err := os.Remove(p)
