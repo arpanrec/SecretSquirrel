@@ -33,8 +33,7 @@ func (fs FileStorageConfig) ListKeys(key *string) ([]string, error) {
 	rootKeyPath := path.Join((*(KeyValuePersistence.(*FileStorageConfig))).Path, *key)
 	files, err := os.ReadDir(rootKeyPath)
 	if err != nil {
-		log.Println("Error while reading dir", err)
-		return nil, err
+		return nil, errors.New("error while reading dir: " + rootKeyPath + "\n" + err.Error())
 	}
 	for _, file := range files {
 		if file.IsDir() {
@@ -55,16 +54,14 @@ func (fs FileStorageConfig) ListVersions(key *string) ([]int, error) {
 		if os.IsNotExist(err) {
 			return []int{}, nil
 		}
-		log.Println("Error while getting dir info for key", *key, err)
-		return nil, err
+		return nil, errors.New("error while getting dir info for key: " + *key + "\n" + err.Error())
 	}
 	if !dirInfo.IsDir() {
 		return nil, errors.New("key is not a directory, key: " + *key)
 	}
 	files, err := os.ReadDir(keyPath)
 	if err != nil {
-		log.Println("Error while listing versions for key", *key, err)
-		return nil, err
+		return nil, errors.New("error while listing versions for key: " + *key + "\n" + err.Error())
 	}
 	for _, file := range files {
 		if file.IsDir() {
@@ -85,8 +82,7 @@ func (fs FileStorageConfig) ListVersions(key *string) ([]int, error) {
 func (fs FileStorageConfig) GetLatestVersion(key *string) (int, error) {
 	var allVersions, err = (*(KeyValuePersistence.(*FileStorageConfig))).ListVersions(key)
 	if err != nil {
-		log.Println("Error while getting latest version for key", *key, err)
-		return 0, err
+		return 0, errors.New("error while getting latest version for key: " + *key + "\n" + err.Error())
 	}
 	if len(allVersions) == 0 {
 		return 0, nil
@@ -97,7 +93,7 @@ func (fs FileStorageConfig) GetLatestVersion(key *string) (int, error) {
 func (fs FileStorageConfig) GetNextVersion(key *string) (int, error) {
 	var allVersions, err = (*(KeyValuePersistence.(*FileStorageConfig))).ListVersions(key)
 	if err != nil {
-		return 0, err
+		return 0, errors.New("error while getting next version for key: " + *key + "\n" + err.Error())
 	}
 	if len(allVersions) == 0 {
 		return 1, nil
@@ -110,7 +106,7 @@ func (fs FileStorageConfig) Get(key *string, version *int) (*KVData, error) {
 	if version == nil {
 		nextVersion, err := (*(KeyValuePersistence.(*FileStorageConfig))).GetLatestVersion(key)
 		if err != nil {
-			return nil, err
+			return nil, errors.New("error while getting the key: " + *key + "\n" + err.Error())
 		}
 		if nextVersion == 0 {
 			return nil, nil
@@ -124,7 +120,7 @@ func (fs FileStorageConfig) Get(key *string, version *int) (*KVData, error) {
 	defer mutexPhysicalFile.Unlock()
 	d, err := os.ReadFile(fullPath)
 	if err != nil {
-		return nil, err
+		return nil, errors.New("error while reading file: " + fullPath + "\n" + err.Error())
 	}
 	var kvData KVData
 	errUnmarshal := json.Unmarshal(d, &kvData)
@@ -137,8 +133,7 @@ func (fs FileStorageConfig) Get(key *string, version *int) (*KVData, error) {
 func (fs FileStorageConfig) Save(key *string, keyValue *KVData) error {
 	latestVersion, err := (*(KeyValuePersistence.(*FileStorageConfig))).GetLatestVersion(key)
 	if err != nil {
-		log.Println("Error while getting latest version while saving key", *key, err)
-		return err
+		return errors.New("error while getting latest version while saving key: " + *key + "\n" + err.Error())
 	}
 	if latestVersion > 0 {
 		return errors.New("version already exists, use Update")
@@ -149,7 +144,7 @@ func (fs FileStorageConfig) Save(key *string, keyValue *KVData) error {
 func (fs FileStorageConfig) Update(key *string, keyValue *KVData, version *int) error {
 	latestVersion, err := (*(KeyValuePersistence.(*FileStorageConfig))).GetLatestVersion(key)
 	if err != nil {
-		return err
+		return errors.New("error while getting latest version while updating key: " + *key + "\n" + err.Error())
 	}
 	if latestVersion == 0 {
 		return errors.New("version does not exist, use Save")
@@ -163,8 +158,7 @@ func (fs FileStorageConfig) saveOrUpdate(key *string, keyValue *KVData, version 
 	if version == nil {
 		nextVersion, err := (*(KeyValuePersistence.(*FileStorageConfig))).GetNextVersion(key)
 		if err != nil {
-			log.Println("Error while getting next version while save or update key", *key, err)
-			return err
+			return errors.New("error while getting next version while save or update key: " + *key + "\n" + err.Error())
 		}
 		version = &nextVersion
 	}
@@ -174,8 +168,7 @@ func (fs FileStorageConfig) saveOrUpdate(key *string, keyValue *KVData, version 
 	defer mutexPhysicalFile.Unlock()
 	errMakeDir := os.MkdirAll(keyVersionDirPath, os.FileMode(0700))
 	if errMakeDir != nil {
-		log.Println("Error while creating dir", keyVersionDirPath, errMakeDir)
-		return errMakeDir
+		return errors.New("error while creating dir: " + keyVersionDirPath + "\n" + errMakeDir.Error())
 	}
 
 	d, errMarshal := json.Marshal(keyValue)
@@ -195,7 +188,7 @@ func (fs FileStorageConfig) Delete(key *string, version *int) error {
 	if version == nil {
 		latestVersion, err := (*(KeyValuePersistence.(*FileStorageConfig))).GetLatestVersion(key)
 		if err != nil {
-			return err
+			return errors.New("error while getting latest version while deleting key: " + *key + "\n" + err.Error())
 		}
 		if latestVersion == 0 {
 			return errors.New("no version exists to delete for key: " + *key)
