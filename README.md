@@ -11,6 +11,7 @@ Data is only accessible to the user who created it.
 
 Authentication is done via basic auth header `Authorization: Basic <base64 encoded username:password>`.
 
+
 - username: GitHub username (not email)
 - password: GitHub personal access token.
 
