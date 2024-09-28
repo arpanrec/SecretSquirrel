@@ -58,7 +58,7 @@ request body:
 
 ```json
 {
-  "dns_names": ["example.com"],
+  "dns_names": ["example.com"]
 }
 ```
 
