@@ -1,10 +1,9 @@
-use std::io::{Read, Write};
-use std::str;
-use std::time::Duration;
 use std::{
-    io::BufReader,
+    io::{BufReader, Read, Write},
     net::{TcpListener, TcpStream},
+    str,
     thread::spawn,
+    time::Duration,
 };
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
