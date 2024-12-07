@@ -1,4 +1,4 @@
-use secretsquirrel::{aes256_enc, aes256_dec};
+use secretsquirrel::{aes256_dec, aes256_enc};
 
 #[tokio::test]
 async fn aes_test() {
