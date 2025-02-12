@@ -20,7 +20,7 @@ pub async fn establish_connection() -> libsql::Result<Connection> {
     db.connect()
 }
 
-pub async fn get_current_version(conn: &Connection, key: &str) -> i64 {
+async fn get_current_version(conn: &Connection, key: &str) -> i64 {
     let mut rows = conn
         .query(
             "SELECT version_a3 FROM secrets_a3 WHERE key_a3 = ? ORDER BY version_a3 DESC LIMIT 1;",
