@@ -3,12 +3,12 @@ use libsql::Connection;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 // CREATE TABLE secrets_d (
-// id_d INTEGER PRIMARY KEY AUTOINCREMENT,
-// key_d TEXT NOT NULL,
-// value_d TEXT NOT NULL,
-// version_d INTEGER DEFAULT (1) NOT NULL,
-// updated_at_d INTEGER DEFAULT (-1) NOT NULL,
-// is_deleted_d INTEGER DEFAULT (0) NOT NULL
+//     id_d INTEGER PRIMARY KEY AUTOINCREMENT,
+//     key_d TEXT NOT NULL,
+//     value_d TEXT NOT NULL,
+//     version_d INTEGER DEFAULT (1) NOT NULL,
+//     updated_at_d INTEGER DEFAULT (-1) NOT NULL,
+//     is_deleted_d INTEGER DEFAULT (0) NOT NULL
 // );
 // CREATE UNIQUE INDEX secrets_d_key_d_IDX ON secrets_d (key_d,version_d);
 
