@@ -12,7 +12,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 // );
 // CREATE UNIQUE INDEX secrets_a3_key_a3_IDX ON secrets_a3 (key_a3,version_a3);
 
-async fn establish_connection() -> libsql::Connection {
+async fn establish_connection() -> Connection {
     let url = std::env::var("TURSO_DATABASE_URL").expect("TURSO_DATABASE_URL must be set");
     let token = std::env::var("TURSO_AUTH_TOKEN").expect("TURSO_AUTH_TOKEN must be set");
 
