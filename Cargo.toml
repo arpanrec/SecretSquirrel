@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-libsql = "0.6.0"
+libsql = { version = "0.6.0", features = ["encryption"] }
 futures = "0.3.31"
 tokio = { version = "1.41.1", features = ["full"] }
 axum = "0.7.9"
